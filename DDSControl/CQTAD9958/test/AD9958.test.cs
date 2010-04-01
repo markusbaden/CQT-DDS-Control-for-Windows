@@ -133,12 +133,10 @@ namespace DDSControl
             // write mode MSB serial 4 bit mode
             byte[] CSRCall = new byte[] { 0x00, (byte)(0x40 + 0x36) };
 
-            using (mocks.Ordered)
-            {
-                Expect.Once.On(mockDevice).Method("SendDataToEP2").With(CSRCall);
-                Expect.Once.On(mockDevice).Method("SendDataToEP2").With(CFTWCall);
-            }
+            byte[] fullCall = DDSUtils.ConcatByteArrays(CSRCall, CFTWCall);
 
+            Expect.Once.On(mockDevice).Method("SendDataToEP2").With(fullCall);
+            
             dds.SetFrequency(0, fout);
             mocks.VerifyAllExpectationsHaveBeenMet();
         }
