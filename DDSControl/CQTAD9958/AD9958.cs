@@ -43,8 +43,8 @@ namespace DDSControl
         public void FullReset()
         {
             log.Info("Performing full reset");
-            byte[] fullResetByte = new byte[] {0x03,0x08,0x0b};
-            device.SendDataToEP1(fullResetByte);
+            Message fullResetMessage = new Message(new byte[] {0x03,0x08,0x0b});
+            sendToEP1(fullResetMessage);
         }
 
         /// <summary>
@@ -231,6 +231,12 @@ namespace DDSControl
         }
 
         #endregion
+
+        private void sendToEP1(Message message)
+        {
+            log.DebugFormat("Sending message to EP1: {0}", message.ToString());
+            device.SendDataToEP1(message.ToArray());
+        }
 
         private void sendToEP2(Message message)
         {
