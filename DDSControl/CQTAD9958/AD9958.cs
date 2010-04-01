@@ -53,6 +53,7 @@ namespace DDSControl
         /// <param name="ChannelNumber">Channel Number. 0,1 for single channel, 2 for both</param>
         public void SelectChannelToWrite(int ChannelNumber)
         {
+            log.InfoFormat("Selecting channel {0} to write to", ChannelNumber);
             sendToEP2(generateSelectChannelMessage(ChannelNumber));
         }
 
@@ -64,6 +65,7 @@ namespace DDSControl
         public void SetMode(string Mode)
         {
             #warning SetMode is still sequential (not single message but two)
+            log.InfoFormat("Selecting mode {0}", Mode);
             Message msg = new Message();
             msg.Add(generateSelectChannelMessage(2));
             msg.Add(generateSetModeMessage(Mode));
@@ -77,6 +79,7 @@ namespace DDSControl
         /// <param name="Levels">{2}</param>
         public void SetLevels(int Levels)
         {
+            log.InfoFormat("Setting levels to {0}", Levels);
             sendToEP2(generateSetLevelMessage(Levels));
         }
 
@@ -88,6 +91,7 @@ namespace DDSControl
         /// <param name="Frequency">Frequency in Hz</param>
         public void SetFrequency(int ChannelNumber, double Frequency)
         {
+            log.InfoFormat("Setting frequency of channel {0} to {1:0.000e0} Hz", ChannelNumber, Frequency);
             #warning SetFrequency of channel is still sequential (not single message but two)
             SelectChannelToWrite(ChannelNumber);
             SetFrequency(Frequency);
@@ -104,6 +108,7 @@ namespace DDSControl
         /// </remarks>
         public void SetFrequency(double Frequency)
         {
+            log.InfoFormat("Setting frequency of current channel to {0:0.000e0}", Frequency);
             sendToEP2(generateSetFrequencyMessage(Frequency));
         }
 
@@ -114,6 +119,7 @@ namespace DDSControl
         /// <param name="AmplitudeScaleFactor">Amplitude Scale Factor, consult data sheet</param>
         public void SetAmplitude(int AmplitudeScaleFactor)
         {
+            log.InfoFormat("Setting amplitude scale factor for current channel to {0}", AmplitudeScaleFactor);
             sendToEP2(generateSetAmplitudeMessage(AmplitudeScaleFactor));
         }
 
