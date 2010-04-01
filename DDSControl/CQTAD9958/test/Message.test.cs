@@ -82,6 +82,16 @@ namespace DDSControl
                 Assert.AreEqual(msgTwo[k], msgOneTwo[k+msgOne.Count]);
             }
         }
+
+        [Test]
+        public void TestToString()
+        {
+            Message msg = new Message(new byte[] {0x0a, 0x0b, 0x0c, 0x0d });
+            string msgString = "0x0A 0x0B 0x0C 0x0D";
+            Assert.AreEqual(msgString, msg.ToString());
+            
+        }
+        
     }
 }            
 
