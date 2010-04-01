@@ -142,10 +142,7 @@ namespace DDSControl
 
             msg.Add(generateSetFrequencyMessage(Frequency));
 
-            // The DDS has an intrinsic phase sift of pi on it
-            // so the phase we have to add a phase offset of
-            // rel. phase - 180
-            msg.Add(generateSetPhaseMessage(RelativePhase-180));
+            msg.Add(generateSetPhaseMessage(RelativePhase));
             sendToEP2(msg);
         }
         
@@ -232,11 +229,14 @@ namespace DDSControl
 
         #endregion
 
+        #region Functions for sending messages
+
         private void sendToEP1(Message message)
         {
             log.DebugFormat("Sending message to EP1: {0}", message.ToString());
             device.SendDataToEP1(message.ToArray());
         }
+
 
         private void sendToEP2(Message message)
         {
@@ -244,6 +244,7 @@ namespace DDSControl
             device.SendDataToEP2(message.ToArray());
         }
 
+        #endregion
 
         private int calculateFrequencyTuningWord(double frequency)
         {
