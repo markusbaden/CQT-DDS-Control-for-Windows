@@ -155,6 +155,7 @@ namespace DDSControl
             Message msg = new Message();
             msg.Add(registerByShortName["CSR"].Address);
             msg.Add(new byte[] { (byte)(channelPatternCSR[ChannelNumber] + writePatternCSR) });
+            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to select channel {0}: {1}", ChannelNumber, msg); }
             return msg;
         }
 
@@ -171,7 +172,8 @@ namespace DDSControl
             byte acr15to8 = (byte)((AmplitudeScaleFactor >> 8) + 0x10);
             byte acr7to0 = (byte)(AmplitudeScaleFactor & 0xFF);
             msg.Add(new byte[] { acr23to16, acr15to8, acr7to0 });
-            
+
+            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set current amplitude to scalefac {0}: {1}", AmplitudeScaleFactor,msg); }
             return msg;
         }
 
@@ -181,6 +183,7 @@ namespace DDSControl
             msg.Add(registerByShortName["CFTW"].Address);
             int FTW = calculateFrequencyTuningWord(Frequency);
             msg.Add(DDSUtils.IntToMSByteArray(FTW));
+            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set current frequency to {0:0.000e0}: {1}", Frequency, msg); }
             return msg;
         }
 
@@ -193,6 +196,8 @@ namespace DDSControl
 
             // 0xa8 and 0x20 take from Christians implementation
             msg.Add(new byte[] { 0xa8, levelByte, 0x20 });
+
+            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set levels to {0}: {1}", Levels, msg); }
 
             return msg;
         }
@@ -207,6 +212,9 @@ namespace DDSControl
 
             // 0x03 and 0x00 taken from Christian's implementation
             msg.Add(new byte[] { ampFreqPhaseByte, 0x03, 0x00 });
+
+            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set mode to {0}: {1}", Mode, msg); }
+            
             return msg;
         }
 
@@ -225,6 +233,8 @@ namespace DDSControl
             byte byte2 = (byte)( PhaseOffsetWord&0xff );
 
             msg.Add(new byte[] { byte1, byte2 });
+
+            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set current phase to {0}: {1}", Phase, msg); }
 
             return msg;
         }
