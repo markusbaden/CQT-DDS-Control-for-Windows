@@ -241,7 +241,7 @@ namespace DDSControl
                 0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100Mhz
                 0x00, 0xB6, // Select Channel 1
                 0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100 Mhz
-                0x05, 0x00, 0x00 // Set Phase to (Pi-Pi)
+                0x05, 0x20, 0x00 // Set Phase to (Pi)
             };
 
             Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(call);
