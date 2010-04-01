@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDSControllerGUI", "DDSControllerGUI\DDSControllerGUI.csproj", "{BBB19BA8-CA9A-4615-B5EF-24241FE12272}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQTAD9958", "CQTAD9958\CQTAD9958.csproj", "{DD7BB065-5741-4EA9-9448-692BEC87425E}"
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 3
+		SccProjectName0 = \u0022$/DDSControl\u0022,\u0020CAAAAAAA
+		SccLocalPath0 = .
+		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+		CanCheckoutShared = false
+		SccProjectUniqueName1 = CQTAD9958\\CQTAD9958.csproj
+		SccLocalPath1 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection1 = CQTAD9958\\
+		SccProjectUniqueName2 = DDSControllerGUI\\DDSControllerGUI.csproj
+		SccLocalPath2 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection2 = DDSControllerGUI\\
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BBB19BA8-CA9A-4615-B5EF-24241FE12272}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBB19BA8-CA9A-4615-B5EF-24241FE12272}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBB19BA8-CA9A-4615-B5EF-24241FE12272}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BBB19BA8-CA9A-4615-B5EF-24241FE12272}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BBB19BA8-CA9A-4615-B5EF-24241FE12272}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{BBB19BA8-CA9A-4615-B5EF-24241FE12272}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBB19BA8-CA9A-4615-B5EF-24241FE12272}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBB19BA8-CA9A-4615-B5EF-24241FE12272}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BBB19BA8-CA9A-4615-B5EF-24241FE12272}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BBB19BA8-CA9A-4615-B5EF-24241FE12272}.Release|Win32.ActiveCfg = Release|Any CPU
+		{DD7BB065-5741-4EA9-9448-692BEC87425E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD7BB065-5741-4EA9-9448-692BEC87425E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD7BB065-5741-4EA9-9448-692BEC87425E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{DD7BB065-5741-4EA9-9448-692BEC87425E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{DD7BB065-5741-4EA9-9448-692BEC87425E}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{DD7BB065-5741-4EA9-9448-692BEC87425E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD7BB065-5741-4EA9-9448-692BEC87425E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD7BB065-5741-4EA9-9448-692BEC87425E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{DD7BB065-5741-4EA9-9448-692BEC87425E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{DD7BB065-5741-4EA9-9448-692BEC87425E}.Release|Win32.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
