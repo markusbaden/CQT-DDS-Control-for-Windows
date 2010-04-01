@@ -93,8 +93,10 @@ namespace DDSControl
         {
             log.InfoFormat("Setting frequency of channel {0} to {1:0.000e0} Hz", ChannelNumber, Frequency);
             #warning SetFrequency of channel is still sequential (not single message but two)
-            SelectChannelToWrite(ChannelNumber);
-            SetFrequency(Frequency);
+            Message msg = new Message();
+            msg.Add(generateSelectChannelMessage(ChannelNumber));
+            msg.Add(generateSetFrequencyMessage(Frequency));
+            sendToEP2(msg);
         }
 
         /// <summary>
@@ -142,7 +144,7 @@ namespace DDSControl
 
             msg.Add(generateSetFrequencyMessage(Frequency));
 
-            msg.Add(generateSetPhaseMessage(RelativePhase));
+            msg.Add(generateSetPhaseMessage(RelativePhase-180));
             sendToEP2(msg);
         }
         
