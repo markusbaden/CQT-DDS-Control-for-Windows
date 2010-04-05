@@ -40,7 +40,7 @@ namespace DDSControl
         /// <summary>
         /// Send full reset command via Endpoint 1.
         /// </summary>
-        public void Reset()
+        public void FullDDSReset()
         {
             log.Info("Performing full reset");
             Message fullResetMessage = new Message(new byte[] {0x03,0x08,0x0b});

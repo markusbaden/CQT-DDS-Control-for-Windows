@@ -53,7 +53,7 @@ namespace DDSControl
             byte[] FullResetByte = new byte[] { 0x03, 0x08, 0x0b };
             Expect.Once.On(mockDevice).Method("SendDataToEP1").With(FullResetByte);
 
-            dds.Reset();
+            dds.FullDDSReset();
 
             mocks.VerifyAllExpectationsHaveBeenMet();
         }

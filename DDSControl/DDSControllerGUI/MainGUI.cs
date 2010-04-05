@@ -93,7 +93,7 @@ namespace DDSControl
         private void fullResetButton_Click(object sender, EventArgs e)
         {
             AD9958 selectedDDS = ddsList[deviceListBox.SelectedIndex];
-            selectedDDS.Reset();
+            selectedDDS.FullDDSReset();
 
             selectedDDS.SetMode("singletone");
             selectedDDS.SetLevels(2);              
