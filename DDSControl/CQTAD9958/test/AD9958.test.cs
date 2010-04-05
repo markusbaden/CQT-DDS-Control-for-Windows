@@ -231,28 +231,29 @@ namespace DDSControl
             mocks.VerifyAllExpectationsHaveBeenMet();
         }
 
+        [Test]
         public void TestSetRelativePhaseOfPiHalf()
         {
-            // The call sequence is (tested successfully with CyConsole)
-            // 01 A8 00 20 00 F6 03 00 03 00 00 76 04 33 33 33 33 00 B6 04 33 33 33 33 00 B6 05 10 00
-            // The DDS has an intrinsic relative phase shift of pi, we have to add phase offset 90-180
-            // mod 2 pi
-            byte[] call = new byte[] {
-                0x01, 0xA8, 0x00, 0x20, // Set modulation levels to two
-                0x00, 0xF6, 0x03, 0x00, 0x03, 0x00, // Select both channels, set singletone operation
-                0x00, 0x76, // Select Channel 0
-                0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100Mhz
-                0x05, 0x00, 0x00, // Set Phase to zero (always as a reference)
-                0x00, 0xB6, // Select Channel 1
-                0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100 Mhz
-                0x05, 0x00, 0x10 // Set Phase to (Pi-Pi)
-            };
+
+            // Set both channels to 100 MHz and a relative phase zero since
+            // there is an additional phase shift of pi on the board
+            Message setChannelsCall = new Message();
+
+            setChannelsCall.Add(setTwoLevel); // Set modulation levels to two
+            setChannelsCall.Add(selectBothChannels); // Select both channels
+            setChannelsCall.Add(setSingleTone); // Set singletone mode
+            setChannelsCall.Add(selectChannelZero); // Select channel 0
+            setChannelsCall.Add(setFreqTo100MHz); // Set freq to 100MHz
+            setChannelsCall.Add(setPhaseToZero); // Set phase to zero (always as reference)
+            setChannelsCall.Add(selectChannelOne); // Select channel 1
+            setChannelsCall.Add(setFreqTo100MHz); // Set freq to 100 Mhz
+            setChannelsCall.Add(new byte[] {0x05, 0x30, 0x00} ); // Set phase to 270 (since there is a phase shift of pi on the pcb)
 
             using (mocks.Ordered)
             {
                 Expect.Once.On(mockDevice).Method("SendDataToEP1").With(fullDDSReset.ToArray());
                 Expect.Once.On(mockDevice).Method("SendDataToEP2").With(initialization.ToArray());
-                Expect.Once.On(mockDevice).Method("SendDataToEP2").With(call.ToArray());
+                Expect.Once.On(mockDevice).Method("SendDataToEP2").With(setChannelsCall.ToArray());
             }
 
             dds.SetTwoChannelRelativePhase(100e6, 90);
