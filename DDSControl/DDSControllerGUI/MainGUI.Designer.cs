@@ -38,10 +38,15 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.dualChannelUserControl1 = new DDSControl.DualChannelUserControl();
             this.setChannelButton = new System.Windows.Forms.Button();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPageSingleTone = new System.Windows.Forms.TabPage();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.channelTabControl.SuspendLayout();
             this.channelZeroTabPage.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPageSingleTone.SuspendLayout();
             this.SuspendLayout();
             // 
             // deviceListBox
@@ -67,7 +72,7 @@
             this.channelTabControl.Controls.Add(this.channelZeroTabPage);
             this.channelTabControl.Controls.Add(this.tabPage2);
             this.channelTabControl.Controls.Add(this.tabPage3);
-            this.channelTabControl.Location = new System.Drawing.Point(354, 12);
+            this.channelTabControl.Location = new System.Drawing.Point(6, 6);
             this.channelTabControl.Name = "channelTabControl";
             this.channelTabControl.SelectedIndex = 0;
             this.channelTabControl.Size = new System.Drawing.Size(261, 138);
@@ -129,7 +134,7 @@
             // 
             // setChannelButton
             // 
-            this.setChannelButton.Location = new System.Drawing.Point(354, 156);
+            this.setChannelButton.Location = new System.Drawing.Point(6, 150);
             this.setChannelButton.Name = "setChannelButton";
             this.setChannelButton.Size = new System.Drawing.Size(261, 23);
             this.setChannelButton.TabIndex = 12;
@@ -137,13 +142,44 @@
             this.setChannelButton.UseVisualStyleBackColor = true;
             this.setChannelButton.Click += new System.EventHandler(this.setChannelButton_Click);
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPageSingleTone);
+            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Location = new System.Drawing.Point(386, 12);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(388, 340);
+            this.tabControl1.TabIndex = 13;
+            // 
+            // tabPageSingleTone
+            // 
+            this.tabPageSingleTone.Controls.Add(this.channelTabControl);
+            this.tabPageSingleTone.Controls.Add(this.setChannelButton);
+            this.tabPageSingleTone.Location = new System.Drawing.Point(4, 22);
+            this.tabPageSingleTone.Name = "tabPageSingleTone";
+            this.tabPageSingleTone.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageSingleTone.Size = new System.Drawing.Size(380, 314);
+            this.tabPageSingleTone.TabIndex = 0;
+            this.tabPageSingleTone.Text = "Singletone";
+            this.tabPageSingleTone.UseVisualStyleBackColor = true;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(192, 74);
+            this.tabPage4.TabIndex = 1;
+            this.tabPage4.Text = "tabPage4";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
             // MainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(943, 491);
-            this.Controls.Add(this.setChannelButton);
-            this.Controls.Add(this.channelTabControl);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.fullResetButton);
             this.Controls.Add(this.deviceListBox);
             this.Name = "MainGUI";
@@ -153,6 +189,8 @@
             this.channelZeroTabPage.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPageSingleTone.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -169,6 +207,9 @@
         private System.Windows.Forms.Button setChannelButton;
         private ChannelUserControl channelUserControl2;
         private DualChannelUserControl dualChannelUserControl1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPageSingleTone;
+        private System.Windows.Forms.TabPage tabPage4;
 
     }
 }
