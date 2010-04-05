@@ -125,6 +125,16 @@ namespace DDSControl
         private double fout;
         private byte[] CFTWCall;
 
+        private Message fullDDSResetMsg;
+        private Message setTwoLevelMsg;
+        private Message setSingleToneMsg;
+        private Message selectBothChannelsMsg;
+        private Message selectChannelZeroMsg;
+        private Message selectChannelOneMsg;
+        private Message setFreqTo100MHzMsg;
+        private Message setPhaseToZero;
+        private Message initialization;
+
         [SetUp]
         public void Initialize()
         {
@@ -155,7 +165,44 @@ namespace DDSControl
             {
                 CFTWCall[k + 1] = FTWBytes[k];
             }
+
+            // Define some messages
+            // FullDDSReset via EP1
+            fullDDSResetMsg = new Message(new byte[] { 0x03, 0x08, 0x0b });
+
+            // Set to Two Level Modulation
+            // Call to Function Register 1 according to Christian's implementation
+            setTwoLevelMsg = new Message(new byte[] { 0x01, 0xa8, 0x00, 0x20 });
+
+            // Set to single tone
+            // Call to channel function register with AFP select none, 
+            // the middle byte to default and the LSByte to all zeros
+            // as in Christians code
+            setSingleToneMsg = new Message(new byte[] { 0x03, 0x00, 0x03, 0x00 });
+
+            // Select both channels
+            // Call to channel select register with both channels on and open and
+            // write mode MSB serial 4 bit mode
+            selectBothChannelsMsg = new Message(new byte[] { 0x00, (byte)(0xc0 + 0x36) });
+
+            // Select channel one
+            selectChannelZeroMsg = new Message(new byte[] { 0x00, 0x76 });
             
+            // Select channel two
+            selectChannelOneMsg = new Message(new byte[] { 0x00, 0xB6 });
+
+            // Set frequency to 100 MHz
+            // 0x33 0x33 0x33 0x33 / 2**32 = 0.2
+            setFreqTo100MHzMsg = new Message(new byte[] { 0x04, 0x33, 0x33, 0x33, 0x33 });
+
+            // Set phase to zero
+            setPhaseToZero = new Message(new byte[] { 0x05, 0x00, 0x00 });
+            
+            // Initialization after MasterReset
+            initialization = new Message();
+            initialization.Add(selectBothChannelsMsg);
+            initialization.Add(setSingleToneMsg);
+            initialization.Add(setTwoLevelMsg);
         }
         [Test]
         public void TestSetFrequencyTo100Mhz()
@@ -179,6 +226,65 @@ namespace DDSControl
             Expect.Once.On(mockDevice).Method("SendDataToEP2").With(fullCall);
             
             dds.SetFrequency(0, fout);
+            mocks.VerifyAllExpectationsHaveBeenMet();
+        }
+
+
+        [Test]
+        public void TestSetRelativePhaseOfPi()
+        {
+            // Set both channels to 100 MHz and a relative phase zero since
+            // there is an additional phase shift of pi on the board
+            Message setChannelsCall = new Message();
+
+            setChannelsCall.Add(setTwoLevelMsg); // Set modulation levels to two
+            setChannelsCall.Add(selectBothChannelsMsg); // Select both channels
+            setChannelsCall.Add(setSingleToneMsg); // Set singletone mode
+            setChannelsCall.Add(selectChannelZeroMsg); // Select channel 0
+            setChannelsCall.Add(setFreqTo100MHzMsg); // Set freq to 100MHz
+            setChannelsCall.Add(setPhaseToZero); // Set phase to zero (always as reference)
+            setChannelsCall.Add(selectChannelOneMsg); // Select channel 1
+            setChannelsCall.Add(setFreqTo100MHzMsg); // Set freq to 100 Mhz
+            setChannelsCall.Add(setPhaseToZero); // Set phase to zero (since there is a phase shift of pi on the pcb)
+
+            using (mocks.Ordered)
+            {
+                Expect.Once.On(mockDevice).Method("SendDataToEP1").With(fullDDSResetMsg.ToArray());
+                Expect.Once.On(mockDevice).Method("SendDataToEP2").With(initialization.ToArray());
+                Expect.Once.On(mockDevice).Method("SendDataToEP2").With(setChannelsCall.ToArray());
+            }
+
+            dds.SetTwoChannelRelativePhase(100e6, 180);
+            
+            mocks.VerifyAllExpectationsHaveBeenMet();
+        }
+
+        public void TestSetRelativePhaseOfPiHalf()
+        {
+            // The call sequence is (tested successfully with CyConsole)
+            // 01 A8 00 20 00 F6 03 00 03 00 00 76 04 33 33 33 33 00 B6 04 33 33 33 33 00 B6 05 10 00
+            // The DDS has an intrinsic relative phase shift of pi, we have to add phase offset 90-180
+            // mod 2 pi
+            byte[] call = new byte[] {
+                0x01, 0xA8, 0x00, 0x20, // Set modulation levels to two
+                0x00, 0xF6, 0x03, 0x00, 0x03, 0x00, // Select both channels, set singletone operation
+                0x00, 0x76, // Select Channel 0
+                0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100Mhz
+                0x05, 0x00, 0x00, // Set Phase to zero (always as a reference)
+                0x00, 0xB6, // Select Channel 1
+                0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100 Mhz
+                0x05, 0x00, 0x10 // Set Phase to (Pi-Pi)
+            };
+
+            using (mocks.Ordered)
+            {
+                Expect.Once.On(mockDevice).Method("SendDataToEP1").With(fullDDSResetMsg.ToArray());
+                Expect.Once.On(mockDevice).Method("SendDataToEP2").With(initialization.ToArray());
+                Expect.Once.On(mockDevice).Method("SendDataToEP2").With(call.ToArray());
+            }
+
+            dds.SetTwoChannelRelativePhase(100e6, 90);
+
             mocks.VerifyAllExpectationsHaveBeenMet();
         }
     }
@@ -248,72 +354,6 @@ namespace DDSControl
 
             mocks.VerifyAllExpectationsHaveBeenMet();
 
-        }
-    }
-
-    [TestFixture]
-    public class TestSetDualChannel
-    {
-
-        private AD9958 dds;
-        private Mockery mocks;
-        private IDDSMicrocontroller mockMicrocontroller;
-
-        [SetUp]
-        public void Initialize()
-        {
-            mocks = new Mockery();
-            mockMicrocontroller = mocks.NewMock<IDDSMicrocontroller>();
-            dds = new AD9958(mockMicrocontroller);
-        }
-
-        [Test]
-        public void TestSetRelativePhaseOfPi()
-        {
-            // The call sequence is (tested successfully with CyConsole)
-            // 01 A8 00 20 00 F6 03 00 03 00 00 76 04 33 33 33 33 00 B6 04 33 33 33 33 00 B6 05 00 00
-            // The DDS has an intrinsic relative phase shift of pi, so that one we get for free :-)
-            byte[] call = new byte[] {
-                0x01, 0xA8, 0x00, 0x20, // Set modulation levels to two
-                0x00, 0xF6, 0x03, 0x00, 0x03, 0x00, // Select both channels, set singletone operation
-                0x00, 0x76, // Select Channel 0
-                0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100Mhz
-                0x05, 0x00, 0x00, // Set Phase to zero (always as a reference)
-                0x00, 0xB6, // Select Channel 1
-                0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100 Mhz
-                0x05, 0x00, 0x00 // Set Phase to zero (since there is a phase shift of pi on the pcb)
-            };
-
-            Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(call);
-
-            dds.SetTwoChannelRelativePhase(100e6, 180);
-            
-            mocks.VerifyAllExpectationsHaveBeenMet();
-        }
-
-        [Test]
-        public void TestSetRelativePhaseOfPiHalf()
-        {
-            // The call sequence is (tested successfully with CyConsole)
-            // 01 A8 00 20 00 F6 03 00 03 00 00 76 04 33 33 33 33 00 B6 04 33 33 33 33 00 B6 05 10 00
-            // The DDS has an intrinsic relative phase shift of pi, we have to add phase offset 90-180
-            // mod 2 pi
-            byte[] call = new byte[] {
-                0x01, 0xA8, 0x00, 0x20, // Set modulation levels to two
-                0x00, 0xF6, 0x03, 0x00, 0x03, 0x00, // Select both channels, set singletone operation
-                0x00, 0x76, // Select Channel 0
-                0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100Mhz
-                0x05, 0x00, 0x00, // Set Phase to zero (always as a reference)
-                0x00, 0xB6, // Select Channel 1
-                0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100 Mhz
-                0x05, 0x00, 0x10 // Set Phase to (Pi-Pi)
-            };
-
-            Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(call);
-
-            dds.SetTwoChannelRelativePhase(100e6, 90);
-
-            mocks.VerifyAllExpectationsHaveBeenMet();
         }
     }
 }
