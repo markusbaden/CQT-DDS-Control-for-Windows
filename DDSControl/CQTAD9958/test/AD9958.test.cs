@@ -158,10 +158,10 @@ namespace DDSControl
             // write mode MSB serial 4 bit mode
             selectBothChannels = new Message(new byte[] { 0x00, (byte)(0xc0 + 0x36) });
 
-            // Select channel one
+            // Select channel zero
             selectChannelZero = new Message(new byte[] { 0x00, 0x76 });
             
-            // Select channel two
+            // Select channel one
             selectChannelOne = new Message(new byte[] { 0x00, 0xB6 });
 
             // Set frequency to 100 MHz
@@ -326,6 +326,48 @@ namespace DDSControl
             dds.SetAmplitude(secondAmplitude);
 
             mocks.VerifyAllExpectationsHaveBeenMet();
+
+        }
+    }
+
+    [TestFixture]
+    public class TestModulation
+    {
+        private Message selectChannelZero;
+        private Message setTwoLevel;
+        private Message selectFrequencyModulation;
+        private Message setFreqTuningWord1MHz;
+        private Message setChanWordOne2MHz;
+
+        [SetUp]
+        public void Initialize()
+        {
+            // Define some messages
+            // Select channel zero
+            selectChannelZero = new Message(new byte[] { 0x00, 0x76 });
+
+            // Set to Two Level Modulation
+            // Call to Function Register 1 according to Christian's implementation
+            setTwoLevel = new Message(new byte[] { 0x01, 0xa8, 0x00, 0x20 });
+
+            // Set to single tone
+            // Call to channel function register with AFP select FM, 
+            // the middle byte to default and the LSByte to all zeros
+            // as in Christians code
+            selectFrequencyModulation = new Message(new byte[] { 0x03, 0x80, 0x03, 0x00 });
+
+            // Set frequency tuning word of current channel to 1 MHz
+            // 0x00 0x83 0x12 0x6E / 2**32 = 0.002
+            setFreqTuningWord1MHz = new Message(new byte[] { 0x04, 0x00, 0x83, 0x12, 0x6E });
+
+            // Set Channel Word Register 1 to 2 MHz
+            setChanWordOne2MHz = new Message(new byte[] { 0x0A, 0x01, 0x06, 0x24, 0xDD });
+
+        }
+
+        [Test]
+        public void TestSetSingleChannelFM()
+        {
 
         }
     }
