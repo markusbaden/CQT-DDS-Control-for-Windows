@@ -13,6 +13,11 @@ namespace DDSControl
         private AD9958 dds;
         private Mockery mocks;
         private IDDSMicrocontroller mockDevice;
+
+        private Message setTwoLevelMsg;
+        private Message setSingleToneMsg;
+        private Message selectBothChannelsMsg;
+        
         
         [SetUp]
         public void Initialize()
@@ -20,39 +25,59 @@ namespace DDSControl
             mocks = new Mockery();
             mockDevice = mocks.NewMock<IDDSMicrocontroller>();
             dds = new AD9958(mockDevice);
+
+            // Define some common calls
+
+            // Set to Two Level Modulation
+            // Call to Function Register 1 according to Christian's implementation
+            setTwoLevelMsg = new Message(new byte[] { 0x01, 0xa8, 0x00, 0x20 });
+
+            // Set to single tone
+            // Call to channel function register with AFP select none, 
+            // the middle byte to default and the LSByte to all zeros
+            // as in Christians code
+            setSingleToneMsg = new Message(new byte[] { 0x03, 0x00, 0x03, 0x00 });
+
+            //Select both channels
+            // Call to channel select register with both channels on and open and
+            // write mode MSB serial 4 bit mode
+            selectBothChannelsMsg = new Message(new byte[] { 0x00, (byte)(0xc0 + 0x36) });
+
+
         }
 
         [Test]
-        public void TestFullReset()
+        public void TestReset()
         {
             // Define call
             byte[] FullResetByte = new byte[] { 0x03, 0x08, 0x0b };
             Expect.Once.On(mockDevice).Method("SendDataToEP1").With(FullResetByte);
 
-            dds.FullReset();
+            dds.Reset();
 
             mocks.VerifyAllExpectationsHaveBeenMet();
+        }
+
+        [Test]
+        public void TestMasterReset()
+        {
+            // Define call for Reset
+            byte[] FullResetByte = new byte[] { 0x03, 0x08, 0x0b };
+
         }
         
         [Test]
         public void TestSetSingleToneMode()
         {
-            // Define what calls you'd expect
-            // Call to channel select register with both channels on and open and
-            // write mode MSB serial 4 bit mode
-            byte[] CSRCall = new byte[] { 0x00, (byte) (0xc0 + 0x36) };
-            
-            // Call to channel function register with AFP select none, 
-            // the middle byte to default and the LSByte to all zeros
-            // as in Christians code
-            byte[] CFRCall = new byte[] { 0x03, 0x00, 0x03, 0x00 };
-            
-            // Now concat the two to a single byte array
-            byte[] call = DDSUtils.ConcatByteArrays(CSRCall, CFRCall);
-            
+
+            // Define what message you expect
+            Message call = new Message();
+            call.Add(selectBothChannelsMsg);
+            call.Add(setSingleToneMsg);
+
             using (mocks.Ordered)
             {
-                Expect.Once.On(mockDevice).Method("SendDataToEP2").With(call);
+                Expect.Once.On(mockDevice).Method("SendDataToEP2").With(call.ToArray());
             }
 
             dds.SetMode("singletone");
@@ -63,11 +88,7 @@ namespace DDSControl
         [Test]
         public void TestSetTwoLevels()
         {
-            // Define what calls you'd expect
-            // Call to Function Register 1 according to Christian's implementation
-            byte[] FR1Call = new byte[] { 0x01, 0xa8, 0x00, 0x20 };
-
-            Expect.Once.On(mockDevice).Method("SendDataToEP2").With(FR1Call);
+            Expect.Once.On(mockDevice).Method("SendDataToEP2").With(setTwoLevelMsg.ToArray());
             dds.SetLevels(2);
             mocks.VerifyAllExpectationsHaveBeenMet();
             
@@ -237,6 +258,7 @@ namespace DDSControl
                 0x00, 0xF6, 0x03, 0x00, 0x03, 0x00, // Select both channels, set singletone operation
                 0x00, 0x76, // Select Channel 0
                 0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100Mhz
+                0x05, 0x00, 0x00, // Set Phase to zero (always as a reference)
                 0x00, 0xB6, // Select Channel 1
                 0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100 Mhz
                 0x05, 0x00, 0x00 // Set Phase to zero (since there is a phase shift of pi on the pcb)
@@ -249,6 +271,7 @@ namespace DDSControl
             mocks.VerifyAllExpectationsHaveBeenMet();
         }
 
+        [Test]
         public void TestSetRelativePhaseOfPiHalf()
         {
             // The call sequence is (tested successfully with CyConsole)
@@ -260,6 +283,7 @@ namespace DDSControl
                 0x00, 0xF6, 0x03, 0x00, 0x03, 0x00, // Select both channels, set singletone operation
                 0x00, 0x76, // Select Channel 0
                 0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100Mhz
+                0x05, 0x00, 0x00, // Set Phase to zero (always as a reference)
                 0x00, 0xB6, // Select Channel 1
                 0x04, 0x33, 0x33, 0x33, 0x33, // Set Freq to 100 Mhz
                 0x05, 0x00, 0x10 // Set Phase to (Pi-Pi)

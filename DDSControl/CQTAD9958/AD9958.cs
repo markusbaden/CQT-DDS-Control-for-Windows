@@ -40,7 +40,7 @@ namespace DDSControl
         /// <summary>
         /// Send full reset command via Endpoint 1.
         /// </summary>
-        public void FullReset()
+        public void Reset()
         {
             log.Info("Performing full reset");
             Message fullResetMessage = new Message(new byte[] {0x03,0x08,0x0b});
@@ -129,6 +129,11 @@ namespace DDSControl
         {
             log.InfoFormat("Setting both channels to {0:0.000e0} with a relative phase of {1}", Frequency, RelativePhase);
 
+            #warning generateSetPhaseMessage assumes that there is an intrinsic phase shift of pi on the board
+            double phaseShiftOnBoard = 180;
+
+            if (log.IsInfoEnabled) { log.InfoFormat("I am assuming a phase shift on the board of {0} (sent = set - {0})", phaseShiftOnBoard); }
+
             Message msg = new Message();
             msg.Add(generateSetLevelMessage(2));
 
@@ -140,11 +145,13 @@ namespace DDSControl
 
             msg.Add(generateSetFrequencyMessage(Frequency));
 
+            msg.Add(generateSetPhaseMessage(0));
+
             msg.Add(generateSelectChannelMessage(1));
 
             msg.Add(generateSetFrequencyMessage(Frequency));
 
-            msg.Add(generateSetPhaseMessage(RelativePhase));
+            msg.Add(generateSetPhaseMessage(RelativePhase-phaseShiftOnBoard));
             sendToEP2(msg);
         }
         
@@ -220,11 +227,12 @@ namespace DDSControl
 
         private Message generateSetPhaseMessage(double Phase)
         {
-            #warning generateSetPhaseMessage assumes that there is an intrinsic phase shift of pi on the board
-            double phaseShiftOnBoard = 180;
-            double moduloPhase = (Phase - phaseShiftOnBoard) % 360;
+
+            double moduloPhase = Phase % 360;
             if (moduloPhase < 0)
-                moduloPhase = 360 - moduloPhase;
+                moduloPhase = moduloPhase + 360;
+
+            if (log.IsDebugEnabled) { log.DebugFormat("Setting phase modulo 360, i.e. {0} -> {1} ", Phase, moduloPhase); }
             
             Message msg = new Message();
             msg.Add(registerByShortName["CPOW"].Address);
@@ -236,7 +244,7 @@ namespace DDSControl
 
             msg.Add(new byte[] { byte1, byte2 });
 
-            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set current phase to {0} (send = set - {1}): {2}", Phase, phaseShiftOnBoard, msg); }
+            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set current phase to {0}: {1}", moduloPhase, msg); }
 
             return msg;
         }
