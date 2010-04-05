@@ -148,6 +148,8 @@ namespace DDSControl
         {
             log.InfoFormat("Setting both channels to {0:0.000e0} with a relative phase of {1}", Frequency, RelativePhase);
 
+            MasterReset();
+
             #warning generateSetPhaseMessage assumes that there is an intrinsic phase shift of pi on the board
             double phaseShiftOnBoard = 180;
 
