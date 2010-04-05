@@ -17,6 +17,7 @@ namespace DDSControl
         private Message setTwoLevelMsg;
         private Message setSingleToneMsg;
         private Message selectBothChannelsMsg;
+        private Message fullDDSResetMsg;
         
         
         [SetUp]
@@ -38,20 +39,25 @@ namespace DDSControl
             // as in Christians code
             setSingleToneMsg = new Message(new byte[] { 0x03, 0x00, 0x03, 0x00 });
 
-            //Select both channels
+            // Select both channels
             // Call to channel select register with both channels on and open and
             // write mode MSB serial 4 bit mode
             selectBothChannelsMsg = new Message(new byte[] { 0x00, (byte)(0xc0 + 0x36) });
 
+            // FullDDSReset via EP1
+            fullDDSResetMsg = new Message(new byte[] { 0x03, 0x08, 0x0b });
+            
 
         }
 
         [Test]
-        public void TestReset()
+        public void TestFullDDSReset()
         {
             // Define call
-            byte[] FullResetByte = new byte[] { 0x03, 0x08, 0x0b };
-            Expect.Once.On(mockDevice).Method("SendDataToEP1").With(FullResetByte);
+            Message call = new Message();
+            call.Add(fullDDSResetMsg);
+            
+            Expect.Once.On(mockDevice).Method("SendDataToEP1").With(call.ToArray());
 
             dds.FullDDSReset();
 
