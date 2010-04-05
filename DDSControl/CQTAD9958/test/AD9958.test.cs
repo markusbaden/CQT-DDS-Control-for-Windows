@@ -121,9 +121,6 @@ namespace DDSControl
         private AD9958 dds;
         private Mockery mocks;
         private IDDSMicrocontroller mockDevice;
-        private int FTW;
-        private double fout;
-        private byte[] CFTWCall;
 
         private Message fullDDSReset;
         private Message setTwoLevel;
@@ -141,30 +138,6 @@ namespace DDSControl
             mocks = new Mockery();
             mockDevice = mocks.NewMock<IDDSMicrocontroller>();
             dds = new AD9958(mockDevice);
-        
-            // Calculate 100Mhz frequency tuning word
-            double clock = 500e6;
-            fout = 100e6;
-
-            // Resolution is 2^32 which exceeds the max
-            // of int32 (signed) so we use a long
-            long resolution = ((long)1) << 32;
-
-            double freqstep = resolution / clock;
-
-            // Frequency Tuning Word FTW < 2^31 which
-            // is smaller then the max of int32 so we can go back
-            // to int
-            FTW = (int)(fout * freqstep);
-
-            // Calculate CFTW Call for 100Mhz
-            byte[] FTWBytes = DDSUtils.IntToMSByteArray(FTW);
-            CFTWCall = new byte[FTWBytes.Length + 1];
-            CFTWCall[0] = 0x04;
-            for (int k = 0; k < FTWBytes.Length; k++)
-            {
-                CFTWCall[k + 1] = FTWBytes[k];
-            }
 
             // Define some messages
             // FullDDSReset via EP1
@@ -207,8 +180,10 @@ namespace DDSControl
         [Test]
         public void TestSetFrequencyTo100Mhz()
         {
-            Expect.Once.On(mockDevice).Method("SendDataToEP2").With(CFTWCall);
-            dds.SetFrequency(fout);
+            Message call = new Message();
+            call.Add(setFreqTo100MHz);
+            Expect.Once.On(mockDevice).Method("SendDataToEP2").With(call.ToArray());
+            dds.SetFrequency(100e6);
             mocks.VerifyAllExpectationsHaveBeenMet();
         }
 
@@ -216,16 +191,13 @@ namespace DDSControl
         [Test]
         public void TestSetFrequencyOfChan0To100Mhz()
         {
-            // Define what calls you'd expect
-            // Call to channel select register with channel 0 on and open and
-            // write mode MSB serial 4 bit mode
-            byte[] CSRCall = new byte[] { 0x00, (byte)(0x40 + 0x36) };
+            Message call = new Message();
+            call.Add(selectChannelZero);
+            call.Add(setFreqTo100MHz);
 
-            byte[] fullCall = DDSUtils.ConcatByteArrays(CSRCall, CFTWCall);
-
-            Expect.Once.On(mockDevice).Method("SendDataToEP2").With(fullCall);
+            Expect.Once.On(mockDevice).Method("SendDataToEP2").With(call.ToArray());
             
-            dds.SetFrequency(0, fout);
+            dds.SetFrequency(0, 100e6);
             mocks.VerifyAllExpectationsHaveBeenMet();
         }
 
