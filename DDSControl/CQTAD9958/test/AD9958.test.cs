@@ -333,6 +333,10 @@ namespace DDSControl
     [TestFixture]
     public class TestModulation
     {
+        private AD9958 dds;
+        private Mockery mocks;
+        private IDDSMicrocontroller mockMicrocontroller;
+        
         private Message selectChannelZero;
         private Message setTwoLevel;
         private Message selectFrequencyModulation;
@@ -342,6 +346,10 @@ namespace DDSControl
         [SetUp]
         public void Initialize()
         {
+            mocks = new Mockery();
+            mockMicrocontroller = mocks.NewMock<IDDSMicrocontroller>();
+            dds = new AD9958(mockMicrocontroller);
+
             // Define some messages
             // Select channel zero
             selectChannelZero = new Message(new byte[] { 0x00, 0x76 });
@@ -368,7 +376,17 @@ namespace DDSControl
         [Test]
         public void TestSetSingleChannelFM()
         {
+            Message call = new Message();
+            call.Add(selectChannelZero);
+            call.Add(setTwoLevel);
+            call.Add(selectFrequencyModulation);
+            call.Add(setFreqTuningWord1MHz);
+            call.Add(setChanWordOne2MHz);
 
+            Expect.Once.On(mockMicrocontroller).Method("SendToEP1").With(call.ToArray());
+
+            mocks.VerifyAllExpectationsHaveBeenMet();
+            
         }
     }
 }
