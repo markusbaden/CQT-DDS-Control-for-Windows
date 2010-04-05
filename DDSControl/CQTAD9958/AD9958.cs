@@ -42,9 +42,30 @@ namespace DDSControl
         /// </summary>
         public void FullDDSReset()
         {
-            log.Info("Performing full reset");
+            log.Info("Performing FullDDSReset");
             Message fullResetMessage = new Message(new byte[] {0x03,0x08,0x0b});
             sendToEP1(fullResetMessage);
+        }
+
+        /// <summary>
+        /// Do a master reset on the DDS, that is a FullDDSReset plus intialization
+        /// </summary>
+
+        public void MasterReset()
+        {
+            if (log.IsInfoEnabled) { log.Info("Performing a master reset."); }
+
+            FullDDSReset();
+
+            log.Info("Initializing DDS as part of master reset.");
+            
+            Message initialization = new Message();
+            initialization.Add(generateSelectChannelMessage(2));
+            initialization.Add(generateSetModeMessage("singletone"));
+            initialization.Add(generateSetLevelMessage(2));
+
+
+            sendToEP2(initialization);
         }
 
         /// <summary>

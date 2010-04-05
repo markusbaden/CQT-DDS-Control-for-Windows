@@ -67,9 +67,23 @@ namespace DDSControl
         [Test]
         public void TestMasterReset()
         {
-            // Define call for Reset
-            byte[] FullResetByte = new byte[] { 0x03, 0x08, 0x0b };
+            Message fullResetCall = new Message();
+            fullResetCall.Add(fullDDSResetMsg);
 
+            Message initializeCall = new Message();
+            initializeCall.Add(selectBothChannelsMsg);
+            initializeCall.Add(setSingleToneMsg);
+            initializeCall.Add(setTwoLevelMsg);
+
+            using (mocks.Ordered)
+            {
+                Expect.Once.On(mockDevice).Method("SendDataToEP1").With(fullResetCall.ToArray());
+                Expect.Once.On(mockDevice).Method("SendDataToEP2").With(initializeCall.ToArray());
+            }
+
+            dds.MasterReset();
+
+            mocks.VerifyAllExpectationsHaveBeenMet();
         }
         
         [Test]
