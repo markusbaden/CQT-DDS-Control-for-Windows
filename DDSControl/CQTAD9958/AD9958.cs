@@ -185,6 +185,20 @@ namespace DDSControl
             msg.Add(generateSetPhaseMessage(RelativePhase-phaseShiftOnBoard));
             sendToEP2(msg);
         }
+
+        public void SetModulation(double FrequencyOne, double FrequencyTwo)
+        {
+            if (log.IsInfoEnabled) { log.InfoFormat("Setting Channel 0 to two level FM with frequencies {0} and {1}", FrequencyOne, FrequencyTwo); }
+            Message msg = new Message();
+            msg.Add(generateSelectChannelMessage(0));
+            msg.Add(generateSetLevelMessage(2));
+            msg.Add(generateSetModeMessage("fm"));
+            msg.Add(generateSetFrequencyMessage(FrequencyOne));
+            byte[] channelRegisterWord = calculateFrequencyTuningWordAsBytes(FrequencyTwo);
+            msg.Add(generateSetChannelWordMessage(1,channelRegisterWord));
+            
+            sendToEP2(msg);            
+        }
         
         #region Functions to generate messages
 
@@ -194,6 +208,18 @@ namespace DDSControl
             msg.Add(registerByShortName["CSR"].Address);
             msg.Add(new byte[] { (byte)(channelPatternCSR[ChannelNumber] + writePatternCSR) });
             if (log.IsDebugEnabled) { log.DebugFormat("Generated message to select channel {0}: {1}", ChannelNumber, msg); }
+            return msg;
+        }
+
+        private Message generateSetChannelWordMessage(int ChannelRegisterNumber, byte[] Content)
+        {
+            Message msg = new Message();
+            byte addressByte = (byte)(0x0A + (ChannelRegisterNumber - 1));
+            msg.Add(addressByte);
+            msg.Add(Content);
+
+            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set Channel Register {0} to given content: {1}", ChannelRegisterNumber,msg); }
+
             return msg;
         }
 
@@ -219,8 +245,7 @@ namespace DDSControl
         {
             Message msg = new Message();
             msg.Add(registerByShortName["CFTW"].Address);
-            int FTW = calculateFrequencyTuningWord(Frequency);
-            msg.Add(DDSUtils.IntToMSByteArray(FTW));
+            msg.Add(calculateFrequencyTuningWordAsBytes(Frequency));
             if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set current frequency to {0:0.000e0}: {1}", Frequency, msg); }
             return msg;
         }
@@ -302,6 +327,12 @@ namespace DDSControl
         private int calculateFrequencyTuningWord(double frequency)
         {
             return (int)(frequency * frequencyStep);
+        }
+
+        private byte[] calculateFrequencyTuningWordAsBytes(double frequency)
+        {
+            int FTW = calculateFrequencyTuningWord(frequency);
+            return DDSUtils.IntToMSByteArray(FTW);
         }
 
         private int calculatePhaseOffsetWord(double phase)
@@ -435,6 +466,7 @@ namespace DDSControl
             // If you add am, fm and pm support make sure you change 
             // the comment at the dict definition.
             ampFreqPhasePatternCFR.Add("singletone", 0x00);
+            ampFreqPhasePatternCFR.Add("fm", 0x80);
         }
 
         private void defineLevelPattern()

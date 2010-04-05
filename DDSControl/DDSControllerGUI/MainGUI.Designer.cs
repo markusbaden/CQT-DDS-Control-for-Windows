@@ -38,15 +38,16 @@
             this.tabControlMode = new System.Windows.Forms.TabControl();
             this.tabSingletone = new System.Windows.Forms.TabPage();
             this.tabModulation = new System.Windows.Forms.TabPage();
-            this.channelUserControl1 = new DDSControl.ChannelUserControl();
-            this.channelUserControl2 = new DDSControl.ChannelUserControl();
-            this.dualChannelUserControl1 = new DDSControl.DualChannelUserControl();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.channelUserControl1 = new DDSControl.ChannelUserControl();
+            this.channelUserControl2 = new DDSControl.ChannelUserControl();
+            this.dualChannelUserControl1 = new DDSControl.DualChannelUserControl();
+            this.button1 = new System.Windows.Forms.Button();
             this.channelTabControl.SuspendLayout();
             this.channelZeroTabPage.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -152,6 +153,7 @@
             // 
             // tabModulation
             // 
+            this.tabModulation.Controls.Add(this.button1);
             this.tabModulation.Controls.Add(this.label6);
             this.tabModulation.Controls.Add(this.label5);
             this.tabModulation.Controls.Add(this.label4);
@@ -165,27 +167,6 @@
             this.tabModulation.TabIndex = 1;
             this.tabModulation.Text = "Modulation";
             this.tabModulation.UseVisualStyleBackColor = true;
-            // 
-            // channelUserControl1
-            // 
-            this.channelUserControl1.Location = new System.Drawing.Point(6, 6);
-            this.channelUserControl1.Name = "channelUserControl1";
-            this.channelUserControl1.Size = new System.Drawing.Size(224, 88);
-            this.channelUserControl1.TabIndex = 0;
-            // 
-            // channelUserControl2
-            // 
-            this.channelUserControl2.Location = new System.Drawing.Point(6, 6);
-            this.channelUserControl2.Name = "channelUserControl2";
-            this.channelUserControl2.Size = new System.Drawing.Size(224, 88);
-            this.channelUserControl2.TabIndex = 1;
-            // 
-            // dualChannelUserControl1
-            // 
-            this.dualChannelUserControl1.Location = new System.Drawing.Point(6, 6);
-            this.dualChannelUserControl1.Name = "dualChannelUserControl1";
-            this.dualChannelUserControl1.Size = new System.Drawing.Size(241, 72);
-            this.dualChannelUserControl1.TabIndex = 0;
             // 
             // label1
             // 
@@ -241,6 +222,37 @@
             this.label6.TabIndex = 5;
             this.label6.Text = "0";
             // 
+            // channelUserControl1
+            // 
+            this.channelUserControl1.Location = new System.Drawing.Point(6, 6);
+            this.channelUserControl1.Name = "channelUserControl1";
+            this.channelUserControl1.Size = new System.Drawing.Size(224, 88);
+            this.channelUserControl1.TabIndex = 0;
+            // 
+            // channelUserControl2
+            // 
+            this.channelUserControl2.Location = new System.Drawing.Point(6, 6);
+            this.channelUserControl2.Name = "channelUserControl2";
+            this.channelUserControl2.Size = new System.Drawing.Size(224, 88);
+            this.channelUserControl2.TabIndex = 1;
+            // 
+            // dualChannelUserControl1
+            // 
+            this.dualChannelUserControl1.Location = new System.Drawing.Point(6, 6);
+            this.dualChannelUserControl1.Name = "dualChannelUserControl1";
+            this.dualChannelUserControl1.Size = new System.Drawing.Size(241, 72);
+            this.dualChannelUserControl1.TabIndex = 0;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(24, 127);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(148, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Set Modulation";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -285,6 +297,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button button1;
 
     }
 }

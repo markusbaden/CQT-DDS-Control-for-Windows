@@ -383,7 +383,9 @@ namespace DDSControl
             call.Add(setFreqTuningWord1MHz);
             call.Add(setChanWordOne2MHz);
 
-            Expect.Once.On(mockMicrocontroller).Method("SendToEP1").With(call.ToArray());
+            Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(call.ToArray());
+
+            dds.SetModulation(1e6, 2e6);
 
             mocks.VerifyAllExpectationsHaveBeenMet();
             
