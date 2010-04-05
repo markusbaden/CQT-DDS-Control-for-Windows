@@ -85,7 +85,6 @@ namespace DDSControl
         /// <param name="Mode">{"singletone"}</param>
         public void SetMode(string Mode)
         {
-            #warning SetMode is still sequential (not single message but two)
             log.InfoFormat("Selecting mode {0}", Mode);
             Message msg = new Message();
             msg.Add(generateSelectChannelMessage(2));
@@ -113,7 +112,6 @@ namespace DDSControl
         public void SetFrequency(int ChannelNumber, double Frequency)
         {
             log.InfoFormat("Setting frequency of channel {0} to {1:0.000e0} Hz", ChannelNumber, Frequency);
-            #warning SetFrequency of channel is still sequential (not single message but two)
             Message msg = new Message();
             msg.Add(generateSelectChannelMessage(ChannelNumber));
             msg.Add(generateSetFrequencyMessage(Frequency));
