@@ -144,7 +144,7 @@ namespace DDSControl
 
             msg.Add(generateSetFrequencyMessage(Frequency));
 
-            msg.Add(generateSetPhaseMessage(RelativePhase-180));
+            msg.Add(generateSetPhaseMessage(RelativePhase));
             sendToEP2(msg);
         }
         
@@ -220,7 +220,9 @@ namespace DDSControl
 
         private Message generateSetPhaseMessage(double Phase)
         {
-            double moduloPhase = Phase % 360;
+            #warning generateSetPhaseMessage assumes that there is an intrinsic phase shift of pi on the board
+            double phaseShiftOnBoard = 180;
+            double moduloPhase = (Phase - phaseShiftOnBoard) % 360;
             if (moduloPhase < 0)
                 moduloPhase = 360 - moduloPhase;
             
@@ -234,7 +236,7 @@ namespace DDSControl
 
             msg.Add(new byte[] { byte1, byte2 });
 
-            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set current phase to {0}: {1}", Phase, msg); }
+            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set current phase to {0} (send = set - {1}): {2}", Phase, phaseShiftOnBoard, msg); }
 
             return msg;
         }
