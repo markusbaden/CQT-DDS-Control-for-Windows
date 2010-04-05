@@ -144,6 +144,16 @@ namespace DDSControl
             sendToEP2(generateSetAmplitudeMessage(AmplitudeScaleFactor));
         }
 
+
+        /// <summary>
+        /// Set both channels to the same frequency with a relative phase.
+        /// </summary>
+        /// <note>
+        /// This function assumes that the two channels have an intrinsic phase shift of pi (wrong polarity of transformer on board).
+        /// It adds a phase offset to the second channel (1=sin(Frequency*t), 2=sin(Frequency*t+Phase).
+        /// </note>
+        /// <param name="Frequency">Frequency in Hertz</param>
+        /// <param name="RelativePhase">Phase in degree</param>
         public void SetTwoChannelRelativePhase(double Frequency, double RelativePhase)
         {
             log.InfoFormat("Setting both channels to {0:0.000e0} with a relative phase of {1}", Frequency, RelativePhase);
