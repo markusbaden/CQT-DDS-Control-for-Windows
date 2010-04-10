@@ -49,14 +49,24 @@ namespace DDSControl
                 channelWordBoxes[k].Number = k;
                 channelWordBoxes[k].Text = "0";
                 channelWords.Add(0);
-                channelWordBoxes[0].TextChanged += new EventHandler(handleChannelWordChange);
+                channelWordBoxes[k].TextChanged += new EventHandler(handleChannelWordChange);
             }
         }
 
         public void handleChannelWordChange(object sender, EventArgs e)
         {
             NumberedTextBox senderbox = (NumberedTextBox)sender;
-            channelWords[senderbox.Number] = Convert.ToDouble(senderbox.Text);
+            
+            // If the user inputs 1e6 or something similiar, an exception is thrown
+            // after the e (wrong format for conversion), to avoid this put a try around it
+            try
+            {
+                channelWords[senderbox.Number] = Convert.ToDouble(senderbox.Text);
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
     }

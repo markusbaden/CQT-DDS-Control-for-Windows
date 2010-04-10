@@ -112,6 +112,7 @@ namespace DDSControl
         {
             AD9958 selectedDDS = ddsList[deviceListBox.SelectedIndex];
             ModulationSetting setting = modulationUserControl1.ModulationSetting;
+            selectedDDS.SetModulation(setting.Channel, setting.Levels, setting.Mode, setting.ChannelWords.ToArray());
         }
     }
 }
