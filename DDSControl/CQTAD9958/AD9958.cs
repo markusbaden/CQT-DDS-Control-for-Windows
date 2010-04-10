@@ -200,7 +200,7 @@ namespace DDSControl
             sendToEP2(msg);            
         }
 
-        public void SetModulation(string ModulationType, params double[] ChannelWordList)
+        public void SetModulation(int Channel, int Levels, string ModulationType, params double[] ChannelWordList)
         {
             if (log.IsInfoEnabled) { log.InfoFormat("Setting Channel 0 to two level FM with frequencies {0} and {1}", ChannelWordList[0], ChannelWordList[1]); }
             Message msg = new Message();

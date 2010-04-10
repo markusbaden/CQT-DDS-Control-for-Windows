@@ -405,7 +405,7 @@ namespace DDSControl
                 Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(call.ToArray());
             }
             dds.SetModulation(1e6, 2e6);
-            dds.SetModulation("fm", 1e6, 2e6);
+            dds.SetModulation(0, 2, "fm", 1e6, 2e6);
 
             mocks.VerifyAllExpectationsHaveBeenMet();
             
@@ -423,7 +423,7 @@ namespace DDSControl
 
             Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(call.ToArray());
 
-            dds.SetModulation("pm", 0, 180);
+            dds.SetModulation(0, 2, "pm", 0, 180);
             
             mocks.VerifyAllExpectationsHaveBeenMet();
         
