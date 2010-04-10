@@ -420,8 +420,11 @@ namespace DDSControl
             call.Add(selectPhaseModulation);
             call.Add(setPhaseTuningWordZero);
             call.Add(setChanWordOnePi);
-            
+
             Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(call.ToArray());
+
+            dds.SetModulation("pm", 0, 180);
+            
             mocks.VerifyAllExpectationsHaveBeenMet();
         
         }

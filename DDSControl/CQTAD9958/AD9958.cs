@@ -200,16 +200,50 @@ namespace DDSControl
             sendToEP2(msg);            
         }
 
-        public void SetModulation(string ModulationType, double FrequencyOne, double FrequencyTwo)
+        public void SetModulation(string ModulationType, params double[] ChannelWordList)
         {
-            if (log.IsInfoEnabled) { log.InfoFormat("Setting Channel 0 to two level FM with frequencies {0} and {1}", FrequencyOne, FrequencyTwo); }
+            if (log.IsInfoEnabled) { log.InfoFormat("Setting Channel 0 to two level FM with frequencies {0} and {1}", ChannelWordList[0], ChannelWordList[1]); }
             Message msg = new Message();
             msg.Add(generateSelectChannelMessage(0));
             msg.Add(generateSetLevelMessage(2));
-            msg.Add(generateSetModeMessage("fm"));
-            msg.Add(generateSetFrequencyMessage(FrequencyOne));
-            byte[] channelRegisterWord = calculateFrequencyTuningWordAsBytes(FrequencyTwo);
-            msg.Add(generateSetChannelWordMessage(1, channelRegisterWord));
+            msg.Add(generateSetModeMessage(ModulationType));
+
+            switch (ModulationType)
+            {
+                case "fm":
+                    msg.Add(generateSetFrequencyMessage(ChannelWordList[0]));
+                    byte[] channelRegisterWord = calculateFrequencyTuningWordAsBytes(ChannelWordList[1]);
+                    msg.Add(generateSetChannelWordMessage(1, channelRegisterWord));
+                    break;
+                case "pm":
+                    msg.Add(generateSetPhaseMessage(ChannelWordList[0]));
+                    
+                    // Fill the Channel Word Registers
+                    // They are 4byte long and the PhaseOffsetWord only 14bit long
+                    // the PhaseOffsetWord has to be MSB aligned in the register
+                    int PhaseOffsetWord = calculatePhaseOffsetWord(ChannelWordList[1]);
+                    
+                    // First shift the word by two bits to the left to make it MSB aligned
+                    // for a two byte register
+                    PhaseOffsetWord = PhaseOffsetWord << 2;
+                    
+                    // Then convert it to MSBytearray
+                    Message phaseByte = DDSUtils.IntToMSByteArray(PhaseOffsetWord,2);
+                    
+                    // Finally make sure that the two last bits are zero by doing a
+                    // bitwise and with 1111 1100 = 0xFC
+                    phaseByte[1] = (byte) (phaseByte[1] & 0xFC);
+
+                    // Add to zero bytes for the remaining byte registers
+                    phaseByte.AddRange(new byte[] {0x00, 0x00});
+                    msg.Add(generateSetChannelWordMessage(1,phaseByte.ToArray()));
+                    
+                    break;
+                default:
+                    if (log.IsErrorEnabled) { log.ErrorFormat("Could not recognize the modulatioin type {0}", ModulationType); }
+                    break;
+            }
+
 
             sendToEP2(msg);
         }
@@ -298,9 +332,7 @@ namespace DDSControl
         private Message generateSetPhaseMessage(double Phase)
         {
 
-            double moduloPhase = Phase % 360;
-            if (moduloPhase < 0)
-                moduloPhase = moduloPhase + 360;
+            double moduloPhase = calculateModuloPhase(Phase);
 
             if (log.IsDebugEnabled) { log.DebugFormat("Setting phase modulo 360, i.e. {0} -> {1} ", Phase, moduloPhase); }
             
@@ -309,7 +341,17 @@ namespace DDSControl
             
             int PhaseOffsetWord = calculatePhaseOffsetWord(moduloPhase);
 
+            // The CPOW register is two bytes long (16 bit). The PhaseOffsetWord is 
+            // LSB aligned, i.e. the two most significant bits of byte1 are don't care,
+            // the rest of byte1 are bits 13:8 of the word and byte2 are bits 7:0 of the
+            // word.
+            // We first right shift the word by 8 bit to store the bits 13:8 (i.e. 15:8 -> 7:0)
+            // and then set the two highest bits (formerly 15:14, now 7:6) to zero by doing a bitwise 
+            // and with 0011 1111 = 0x3F. For a correct word these should be zero anyway.
             byte byte1 = (byte)( (PhaseOffsetWord >> 8) &0x3f);
+
+            // In order to store bits 7:0 we first blank out the higher bits by doing a bitwise
+            // and with 1111 1111 = 0xFF and then store it
             byte byte2 = (byte)( PhaseOffsetWord&0xff );
 
             msg.Add(new byte[] { byte1, byte2 });
@@ -346,12 +388,20 @@ namespace DDSControl
         private byte[] calculateFrequencyTuningWordAsBytes(double frequency)
         {
             int FTW = calculateFrequencyTuningWord(frequency);
-            return DDSUtils.IntToMSByteArray(FTW);
+            return DDSUtils.IntToMSByteArray(FTW).ToArray();
         }
 
         private int calculatePhaseOffsetWord(double phase)
         {
             return (int)(phase * phaseStep);
+        }
+
+        private double calculateModuloPhase(double Phase)
+        {
+            double moduloPhase = Phase % 360;
+            if (moduloPhase < 0)
+                moduloPhase = moduloPhase + 360;
+            return moduloPhase;
         }
 
         private double clockFrequency = 500e6;
@@ -481,6 +531,7 @@ namespace DDSControl
             // the comment at the dict definition.
             ampFreqPhasePatternCFR.Add("singletone", 0x00);
             ampFreqPhasePatternCFR.Add("fm", 0x80);
+            ampFreqPhasePatternCFR.Add("pm", 0xC0);
         }
 
         private void defineLevelPattern()
