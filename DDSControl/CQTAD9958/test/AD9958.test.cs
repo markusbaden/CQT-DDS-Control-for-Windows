@@ -340,8 +340,11 @@ namespace DDSControl
         private Message selectChannelZero;
         private Message setTwoLevel;
         private Message selectFrequencyModulation;
+        private Message selectPhaseModulation;        
         private Message setFreqTuningWord1MHz;
         private Message setChanWordOne2MHz;
+        private Message setPhaseTuningWordZero;
+        private Message setChanWordOnePi;
 
         [SetUp]
         public void Initialize()
@@ -358,7 +361,7 @@ namespace DDSControl
             // Call to Function Register 1 according to Christian's implementation
             setTwoLevel = new Message(new byte[] { 0x01, 0xa8, 0x00, 0x20 });
 
-            // Set to single tone
+            // Set to frequency modulation
             // Call to channel function register with AFP select FM, 
             // the middle byte to default and the LSByte to all zeros
             // as in Christians code
@@ -371,6 +374,19 @@ namespace DDSControl
             // Set Channel Word Register 1 to 2 MHz
             setChanWordOne2MHz = new Message(new byte[] { 0x0A, 0x01, 0x06, 0x24, 0xDD });
 
+            // Set to phase modulation
+            // Call to channel function register with AFP select PM, 
+            // the middle byte to default and the LSByte to all zeros
+            // as in Christians code
+            selectPhaseModulation = new Message(new byte[] { 0x03, 0xC0, 0x03, 0x00 });
+            
+            // Set phase tuning word to zero
+            setPhaseTuningWordZero = new Message(new byte[] { 0x05, 0x00, 0x00 });
+            
+            // Set channel register word 1 to pi (resolution 14bit)
+            // Pi is 2**13 (10 0000 0000) we have to MSB align it in the 32 bit CW1 register
+            // where we set all others to zero
+            setChanWordOnePi = new Message(new byte[] { 0x0A, 0x80, 0x00, 0x00, 0x00 });
         }
 
         [Test]
@@ -383,12 +399,31 @@ namespace DDSControl
             call.Add(setFreqTuningWord1MHz);
             call.Add(setChanWordOne2MHz);
 
-            Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(call.ToArray());
-
+            using (mocks.Ordered)
+            {
+                Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(call.ToArray());
+                Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(call.ToArray());
+            }
             dds.SetModulation(1e6, 2e6);
+            dds.SetModulation("fm", 1e6, 2e6);
 
             mocks.VerifyAllExpectationsHaveBeenMet();
             
+        }
+
+        [Test]
+        public void TestPhaseModulation()
+        {
+            Message call = new Message();
+            call.Add(selectChannelZero);
+            call.Add(setTwoLevel);
+            call.Add(selectPhaseModulation);
+            call.Add(setPhaseTuningWordZero);
+            call.Add(setChanWordOnePi);
+            
+            Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(call.ToArray());
+            mocks.VerifyAllExpectationsHaveBeenMet();
+        
         }
     }
 }

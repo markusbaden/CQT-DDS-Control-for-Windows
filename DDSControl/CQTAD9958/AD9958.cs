@@ -199,6 +199,20 @@ namespace DDSControl
             
             sendToEP2(msg);            
         }
+
+        public void SetModulation(string ModulationType, double FrequencyOne, double FrequencyTwo)
+        {
+            if (log.IsInfoEnabled) { log.InfoFormat("Setting Channel 0 to two level FM with frequencies {0} and {1}", FrequencyOne, FrequencyTwo); }
+            Message msg = new Message();
+            msg.Add(generateSelectChannelMessage(0));
+            msg.Add(generateSetLevelMessage(2));
+            msg.Add(generateSetModeMessage("fm"));
+            msg.Add(generateSetFrequencyMessage(FrequencyOne));
+            byte[] channelRegisterWord = calculateFrequencyTuningWordAsBytes(FrequencyTwo);
+            msg.Add(generateSetChannelWordMessage(1, channelRegisterWord));
+
+            sendToEP2(msg);
+        }
         
         #region Functions to generate messages
 
