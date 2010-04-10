@@ -10,8 +10,8 @@ namespace DDSControl
         Dictionary<string, double> ExtractValues();
     }
 
-    public interface IExtractModulationSetting
+    public interface IModulationSetting
     {
-        ModulationSetting ExtractModulationSetting();
+        ModulationSetting ModulationSetting { get; }
     }
 }

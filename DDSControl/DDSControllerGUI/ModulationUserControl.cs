@@ -9,11 +9,13 @@ using System.Windows.Forms;
 
 namespace DDSControl
 {
-    public partial class ModulationUserControl : UserControl, IExtractModulationSetting
+    public partial class ModulationUserControl : UserControl, IModulationSetting
     {
         private int levels;
         private List<NumberedTextBox> channelWordBoxes = new List<NumberedTextBox>();
         private List<double> channelWords = new List<double>();
+
+        public ModulationSetting ModulationSetting { get { return extractModulationSetting(); } }
 
         public ModulationUserControl()
         {
@@ -22,7 +24,7 @@ namespace DDSControl
             populateChannelWordBoxes();
         }
 
-        public ModulationSetting ExtractModulationSetting()
+        private ModulationSetting extractModulationSetting()
         {
             ModulationSetting output = new ModulationSetting();
             output.Mode = comboBoxModulationMode.Text;
@@ -47,6 +49,7 @@ namespace DDSControl
                 channelWordBoxes[k].Number = k;
                 channelWordBoxes[k].Text = "0";
                 channelWords.Add(0);
+                channelWordBoxes[0].TextChanged += new EventHandler(handleChannelWordChange);
             }
         }
 

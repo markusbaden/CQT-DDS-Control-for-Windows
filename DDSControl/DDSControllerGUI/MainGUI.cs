@@ -111,6 +111,7 @@ namespace DDSControl
         private void button1_Click(object sender, EventArgs e)
         {
             AD9958 selectedDDS = ddsList[deviceListBox.SelectedIndex];
+            ModulationSetting setting = modulationUserControl1.ModulationSetting;
         }
     }
 }
