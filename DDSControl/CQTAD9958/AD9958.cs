@@ -188,7 +188,20 @@ namespace DDSControl
 
         public void SetModulation(int Channel, int Levels, string ModulationType, params double[] ChannelWordList)
         {
-            if (log.IsInfoEnabled) { log.InfoFormat("Setting Channel 0 to two level FM with frequencies {0} and {1}", ChannelWordList[0], ChannelWordList[1]); }
+            if (log.IsInfoEnabled)
+            {
+                log.InfoFormat("Setting {0} level modulation mode \"{1}\" for channel {2}",Levels, ModulationType, Channel);
+            }
+
+            StringBuilder channelWords = new StringBuilder();
+            channelWords.Append("The channel words are: ");
+            foreach (double word in ChannelWordList)
+            {
+                channelWords.AppendFormat("{0:0.000e0}, ", word);
+            }
+
+            if (log.IsInfoEnabled) { log.Info(channelWords.ToString()); }
+            
             Message msg = new Message();
             msg.Add(generateSelectChannelMessage(0));
             msg.Add(generateSetLevelMessage(2));
