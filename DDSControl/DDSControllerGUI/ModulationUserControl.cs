@@ -12,7 +12,7 @@ namespace DDSControl
     public partial class ModulationUserControl : UserControl, IExtractModulationSetting
     {
         private int levels;
-        private List<TextBox> channelWordBoxes = new List<TextBox>();
+        private List<NumberedTextBox> channelWordBoxes = new List<NumberedTextBox>();
         private List<double> channelWords = new List<double>();
 
         public ModulationUserControl()
@@ -36,15 +36,24 @@ namespace DDSControl
         {
             for (int k = 0; k < levels; k++)
             {
-                channelWordBoxes.Add(new TextBox());
+                channelWordBoxes.Add(new NumberedTextBox());
                 this.Controls.Add(channelWordBoxes[k]);
                 
                 System.Drawing.Point location = new Point();
                 location.X = labelChannelSelection.Location.X;
-                location.Y = labelChannelWords.Location.Y + k*15;
+                location.Y = labelChannelWords.Location.Y + k*25;
                 channelWordBoxes[k].Location = location;
-                channelWordBoxes[k].Size = comboBoxModulationMode.Size;                
+                channelWordBoxes[k].Size = comboBoxModulationMode.Size;
+                channelWordBoxes[k].Number = k;
+                channelWordBoxes[k].Text = "0";
+                channelWords.Add(0);
             }
+        }
+
+        public void handleChannelWordChange(object sender, EventArgs e)
+        {
+            NumberedTextBox senderbox = (NumberedTextBox)sender;
+            channelWords[senderbox.Number] = Convert.ToDouble(senderbox.Text);
         }
 
     }

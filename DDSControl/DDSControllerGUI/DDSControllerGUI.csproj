@@ -86,6 +86,9 @@
     <Compile Include="ModulationUserControl.Designer.cs">
       <DependentUpon>ModulationUserControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="NumberedTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ChannelUserControl.resx">
