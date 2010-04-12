@@ -461,10 +461,35 @@ namespace DDSControl
 
         #endregion
 
+        #region Constructors
+        
+        /// <summary>
+        /// Construct a AD9958 from an IDDS Microcontroller device.
+        /// </summary>
+        /// <param name="usbDevice">Microcontroller device</param>
+        /// <remarks>
+        /// This constructor is the one that is to be used when programming in .NET since it neatly splits
+        /// the CyUSB functionality from the CQTDDS functionality (the IDDS Microcontroller abstracts from 
+        /// the CyUSB functionality and makes the whole thing unit testable. However Labview crashes if 
+        /// one tries to use it in that way, so use the other constructors which hardwire functionality
+        /// of CyUSB
+        /// </remarks>
         public AD9958(IDDSMicrocontroller usbDevice)
         {
             // device is protected member of the base class
             device = usbDevice;
+            initializeAD9958();
+        }
+
+        public AD9958(int DeviceNumber)
+        {
+            USBDeviceList deviceList = new USBDeviceList(CyConst.DEVICES_CYUSB);
+            device = (new DDSMicrocontroller(deviceList[DeviceNumber] as CyUSBDevice));
+            initializeAD9958();
+        }
+
+        private void initializeAD9958()
+        {
             initializeRegisters();
             defineChannelPattern();
             defineAmpFreqPhasePattern();
@@ -472,6 +497,10 @@ namespace DDSControl
             defineFrequencyConstants();
             definePhaseConstants();
         }
+
+
+        #endregion
+
 
         private void initializeRegisters()
         {
