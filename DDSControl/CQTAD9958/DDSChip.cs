@@ -18,6 +18,11 @@ namespace DDSControl
             get;
         }
 
+        public abstract List<double> ReferenceAmplitude
+        {
+            get;
+        }
+
         protected IDDSMicrocontroller device;
         protected Dictionary<string, DDSRegister> registerByShortName;
     

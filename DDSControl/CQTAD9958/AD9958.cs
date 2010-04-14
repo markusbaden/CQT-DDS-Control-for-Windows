@@ -12,6 +12,8 @@ namespace DDSControl
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         #endregion //log4net
 
+        #region DDSChip members
+        
         public override string Description
         {
             get { return device.Product; }
@@ -21,6 +23,15 @@ namespace DDSControl
         {
             get { return device.SerialNumber; }
         }
+
+        public override List<double> ReferenceAmplitude
+        {
+            get { return referenceAmplitude; }
+        }
+
+        private List<double> referenceAmplitude;
+
+        #endregion
 
         public List<string> SupportedModulationModes
         {
@@ -491,6 +502,11 @@ namespace DDSControl
         private void initializeAD9958()
         {
             initializeRegisters();
+            referenceAmplitude = new List<double>();
+            for (int k = 0; k < 2; k++)
+            {
+                referenceAmplitude.Add(0);
+            }
             defineChannelPattern();
             defineAmpFreqPhasePattern();
             defineLevelPattern();
