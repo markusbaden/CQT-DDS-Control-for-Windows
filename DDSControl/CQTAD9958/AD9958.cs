@@ -161,33 +161,6 @@ namespace DDSControl
             sendToEP1(msg);
         }
 
-        /// <summary>
-        /// Set both channels to 10 MHz and jump relative phase in steps of 45 deg. Only for debugging.
-        /// May change and disappear at any instant.
-        /// </summary>
-        public void DebugListplayMode()
-        {
-            MasterReset();
-            SetTwoChannelRelativePhase(10e6, 0);
-            SelectChannelToWrite(0);
-            Stop_Transfer();
-
-            Message msg = new Message();
-            msg.Add(messageFactory.SetPhaseMessage(0));
-            int segmentLength = msg.Count;
-            msg.Add(messageFactory.SetPhaseMessage(45));
-            msg.Add(messageFactory.SetPhaseMessage(90));
-            msg.Add(messageFactory.SetPhaseMessage(135));
-            msg.Add(messageFactory.SetPhaseMessage(180));
-            msg.Add(messageFactory.SetPhaseMessage(225));
-            msg.Add(messageFactory.SetPhaseMessage(270));
-            msg.Add(messageFactory.SetPhaseMessage(315));
-
-            ListplayMode(segmentLength);
-            StartListplayMode();
-            sendToEP2(msg);
-        }
-
         #endregion
 
         /// <summary>
