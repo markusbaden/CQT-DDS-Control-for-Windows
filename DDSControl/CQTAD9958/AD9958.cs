@@ -311,6 +311,17 @@ namespace DDSControl
             sendToEP2(msg);
         }
 
+        public void SetLinearSweep(int Channel, double StartFrequency, double StopFrequency, double RisingRampRate, double RisingDeltaFrequency)
+        {
+            Message msg = new Message();
+            msg.Add(messageFactory.SelectChannelMessage(0));
+            msg.Add(messageFactory.SetLevelMessage(2));
+            msg.Add(messageFactory.SetModeMessage("fm", true, false));
+            msg.Add(messageFactory.SetFrequencyMessage(StartFrequency));
+            msg.Add(messageFactory.SetChannelWordMessage(1,messageFactory.FrequencyMessage(StopFrequency).ToArray()));
+            
+        }
+
         public void SetFrequencyList(params double[] Frequency)
         {
             Stop_Transfer();
@@ -329,12 +340,6 @@ namespace DDSControl
             sendToEP2(msg);
         }
 
-        public void SetLinearSweep(int Channel, double StartFrequency, double EndFrequency, double RisingDeltaFrequency, double RisingDwellTime)
-        {
-            Message msg = new Message();
-            msg.Add(messageFactory.SelectChannelMessage(0));
-        }
-        
         #region Functions for sending and receiving messages
 
         /// <summary>

@@ -92,16 +92,45 @@ namespace DDSControl
 
         public Message SetModeMessage(string Mode)
         {
+            return SetModeMessage(Mode, false, false);
+        }
+
+        public Message SetModeMessage(string Mode, bool LinearSweepEnable, bool LinearSweepNoDwell)
+        {
             Message msg = new Message();
             msg.Add(registerByShortName["CFR"].Address);
 
             // CFR part
+            // The first byte just determines the mode (i.e. AM/FM/PM)
             byte ampFreqPhaseByte = ampFreqPhasePatternCFR[Mode];
 
-            // 0x03 and 0x00 taken from Christian's implementation
-            msg.Add(new byte[] { ampFreqPhaseByte, 0x03, 0x00 });
+            // The second byte sets the DAC current, the Load SRR at I/0 update
+            // and most importantly the linear sweep no dwell and linear sweep enable
+            // bits, the standard byte is 0x03 where linear sweep enable is 0
+            // and linear sweep no dwell as well
+            byte byte2 = 0x03;
+            
 
-            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set mode to {0}: {1}", Mode, msg); }
+            // If LinearSweepEnable is set we have to set bit 6 of that byte to one
+            // first mask bits 5:0 by a bitwise and with 11 1111 = 0x3f and then
+            // do a bitwise XOR with 100 0000 = 0x40
+            if (LinearSweepEnable)
+            {
+                byte2 = (byte)((byte2 & 0x3f) ^ 0x40);
+            }
+            
+            // If LinearSweepNoDwell is set we have set bit 7 of that byte to 1
+            // We first mask bits 6:0 by an bitwise and with 100 000 = 0x40
+            // and then prepend a 1 by an bitwise XOR with 1000 000 = 0x80
+            if (LinearSweepNoDwell)
+            {
+                byte2 = (byte)((byte2 & 0x40) ^ 0x80);
+            }
+
+            // 0x00 taken from Christian's implementation
+            msg.Add(new byte[] { ampFreqPhaseByte, byte2, 0x00 });
+
+            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set mode to {0} with linear sweep {2} and  no dwell {3}: {1}", Mode, msg,LinearSweepEnable,LinearSweepNoDwell); }
 
             return msg;
         }
@@ -118,10 +147,9 @@ namespace DDSControl
                 case "pm":
                     msg.Add(SetPhaseMessage(ChannelWordList[0]));
                     msg.Add(SetChannelWordMessage(1, PhaseAsChannelWordMessage(ChannelWordList[1]).ToArray()));
-
                     break;
                 default:
-                    if (log.IsErrorEnabled) { log.ErrorFormat("Could not recognize the modulatioin type {0}", ModulationType); }
+                    if (log.IsErrorEnabled) { log.ErrorFormat("Could not recognize the modulatioin type {0} while trying to fill in channel words", ModulationType); }
                     break;
             }
             return msg;

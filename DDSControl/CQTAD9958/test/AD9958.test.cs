@@ -546,8 +546,8 @@ namespace DDSControl
 
             Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(msg.ToArray());
 
-            dds.SetLinearSweep(0, 1e6, 2e6, 1e3, 1e-6);
-        
+            dds.SetLinearSweep(0, 1e6, 2e6, 1e3, 1e-3);
+            
             mocks.VerifyAllExpectationsHaveBeenMet();
         }
     }
