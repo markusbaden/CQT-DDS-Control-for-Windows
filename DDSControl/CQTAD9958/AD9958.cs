@@ -193,8 +193,9 @@ namespace DDSControl
             Stop_Transfer();
 
             Message msg = new Message();
-            msg.Add(generateSetPhaseMessage(45));
+            msg.Add(generateSetPhaseMessage(0));
             int segmentLength = msg.Count;
+            msg.Add(generateSetPhaseMessage(45));
             msg.Add(generateSetPhaseMessage(90));
             msg.Add(generateSetPhaseMessage(135));
             msg.Add(generateSetPhaseMessage(180));
