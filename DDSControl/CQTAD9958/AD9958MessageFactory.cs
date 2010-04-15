@@ -106,6 +106,31 @@ namespace DDSControl
             return msg;
         }
 
+        public Message SetModulationMessage(int Channel, int Levels, string ModulationType, params double[] ChannelWordList)
+        {
+            Message msg = new Message();
+            msg.Add(SelectChannelMessage(Channel));
+            msg.Add(SetLevelMessage(Levels));
+            msg.Add(SetModeMessage(ModulationType));
+
+            switch (ModulationType)
+            {
+                case "fm":
+                    msg.Add(SetFrequencyMessage(ChannelWordList[0]));
+                    msg.Add(SetChannelWordMessage(1, FrequencyMessage(ChannelWordList[1]).ToArray()));
+                    break;
+                case "pm":
+                    msg.Add(SetPhaseMessage(ChannelWordList[0]));
+                    msg.Add(SetChannelWordMessage(1, PhaseAsChannelWordMessage(ChannelWordList[1]).ToArray()));
+
+                    break;
+                default:
+                    if (log.IsErrorEnabled) { log.ErrorFormat("Could not recognize the modulatioin type {0}", ModulationType); }
+                    break;
+            }
+            return msg;
+        }
+
         public Message SetPhaseMessage(double Phase)
         {
 

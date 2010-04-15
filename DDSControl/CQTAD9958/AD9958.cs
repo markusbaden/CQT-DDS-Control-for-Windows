@@ -334,39 +334,15 @@ namespace DDSControl
             {
                 log.InfoFormat("Setting {0} level modulation mode \"{1}\" for channel {2}",Levels, ModulationType, Channel);
             }
-
             StringBuilder channelWords = new StringBuilder();
             channelWords.Append("The channel words are: ");
             foreach (double word in ChannelWordList)
             {
                 channelWords.AppendFormat("{0:0.000e0}, ", word);
             }
-
             if (log.IsInfoEnabled) { log.Info(channelWords.ToString()); }
             
-            Message msg = new Message();
-            msg.Add(SelectChannelMessage(Channel));
-            msg.Add(SetLevelMessage(Levels));
-            msg.Add(SetModeMessage(ModulationType));
-
-            switch (ModulationType)
-            {
-                case "fm":
-                    msg.Add(SetFrequencyMessage(ChannelWordList[0]));
-                    msg.Add(SetChannelWordMessage(1, FrequencyMessage(ChannelWordList[1]).ToArray()));
-                    break;
-                case "pm":
-                    msg.Add(SetPhaseMessage(ChannelWordList[0]));
-                    msg.Add(SetChannelWordMessage(1,PhaseAsChannelWordMessage(ChannelWordList[1]).ToArray()));
-                    
-                    break;
-                default:
-                    if (log.IsErrorEnabled) { log.ErrorFormat("Could not recognize the modulatioin type {0}", ModulationType); }
-                    break;
-            }
-
-
-            sendToEP2(msg);
+            sendToEP2(SetModulationMessage(Channel,Levels,ModulationType,ChannelWordList));
         }
         
         #region Functions to generate messages
@@ -404,6 +380,11 @@ namespace DDSControl
         public Message SetModeMessage(string Mode)
         {
             return messageFactory.SetModeMessage(Mode);
+        }
+
+        public Message SetModulationMessage(int Channel, int Levels, string ModulationType, params double[] ChannelWordList)
+        {
+            return messageFactory.SetModulationMessage(Channel, Levels, ModulationType, ChannelWordList);
         }
 
         public Message SetPhaseMessage(double Phase)
@@ -476,7 +457,7 @@ namespace DDSControl
 
         /// <summary>
         /// Create a ADD9958 by looking up a specific connected device by number. This is not a particularly 
-        /// reliable method since the order of the devices depends on the order in which they have been pugged in
+        /// reliable method since the order of the devices depends on the order in which they have been plugged in
         /// </summary>
         /// <param name="DeviceNumber">Device number.</param>
         public AD9958(int DeviceNumber)
@@ -490,8 +471,6 @@ namespace DDSControl
         {
             messageFactory = new AD9958MessageFactory();
         }
-
-
         #endregion
 
 
