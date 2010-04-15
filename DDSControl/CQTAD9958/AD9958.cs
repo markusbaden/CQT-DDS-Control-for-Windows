@@ -181,6 +181,28 @@ namespace DDSControl
             sendToEP1(msg);
         }
 
+        public void DebugListplayMode()
+        {
+            MasterReset();
+            SetTwoChannelRelativePhase(10e6, 0);
+            SelectChannelToWrite(0);
+            Stop_Transfer();
+
+            Message msg = new Message();
+            msg.Add(generateSetPhaseMessage(45));
+            int segmentLength = msg.Count;
+            msg.Add(generateSetPhaseMessage(90));
+            msg.Add(generateSetPhaseMessage(135));
+            msg.Add(generateSetPhaseMessage(180));
+            msg.Add(generateSetPhaseMessage(225));
+            msg.Add(generateSetPhaseMessage(270));
+            msg.Add(generateSetPhaseMessage(315));
+
+            ListplayMode(segmentLength);
+            StartListplayMode();
+            sendToEP2(msg);
+        }
+
         #endregion
 
         /// <summary>
