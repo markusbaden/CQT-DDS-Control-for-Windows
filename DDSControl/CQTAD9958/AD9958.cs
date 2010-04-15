@@ -222,8 +222,8 @@ namespace DDSControl
             if (log.IsInfoEnabled) { log.Info(channelWords.ToString()); }
             
             Message msg = new Message();
-            msg.Add(generateSelectChannelMessage(0));
-            msg.Add(generateSetLevelMessage(2));
+            msg.Add(generateSelectChannelMessage(Channel));
+            msg.Add(generateSetLevelMessage(Levels));
             msg.Add(generateSetModeMessage(ModulationType));
 
             switch (ModulationType)
