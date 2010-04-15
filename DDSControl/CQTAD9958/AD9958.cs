@@ -444,6 +444,11 @@ namespace DDSControl
 
         #region Functions for sending and receiving messages
 
+        /// <summary>
+        /// Send message to EP1. This routine will append a checksum byte at the end of the message. So 
+        /// don't include it in the message passed to this routine
+        /// </summary>
+        /// <param name="message">Message to be sent without checksum byte</param>
         private void sendToEP1(Message message)
         {
             if (log.IsDebugEnabled) { log.DebugFormat("Recieved message to send to EP1{0}", message.ToString()); }
