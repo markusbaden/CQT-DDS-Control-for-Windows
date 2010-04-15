@@ -46,19 +46,6 @@ namespace DDSControl
         #endregion
 
         /// <summary>
-        /// Function for debugging the way the reference amplitudes are extracted via EP1. Does not work
-        /// yet and once it will work it will no longer be public.
-        /// </summary>
-        public void GetReferenceAmplitudes()
-        {
-            MasterReset();
-            referenceAmplitude = new List<double>();
-            sendToEP1(new Message(new byte[] { 0x04, 0x99, 0x64, 0x00 }));
-            Message amplitudes = receiveFromEP1(6);
-        }
-
-
-        /// <summary>
         /// Private member storing the reference amplitudes of the different channels at 10MHz.
         /// </summary>
         private List<double> referenceAmplitude;
