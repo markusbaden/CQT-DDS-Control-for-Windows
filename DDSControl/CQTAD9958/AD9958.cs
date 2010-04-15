@@ -92,9 +92,10 @@ namespace DDSControl
         /// Issue a Full_DDS_Reset. Avoid to use directly, use MasterReset instead.
         /// </summary>
         /// <remarks>
-        /// This is an command defined on the firmware of the EZ USB FX2. It carries out a master reset,
+        /// This is an command defined on the firmware of the EZ USB FX2. It toggles the master reset bit of the DDS chip,
         /// initializes the DDS into the bytewise transfer mode and prepares the USB engine into a mode
-        /// which enables EP2 transfers and switches on the IOUPDATE mode.
+        /// which enables EP2 transfers and switches on the IOUPDATE mode. However it does not set the CSR, CFR and FR1 to 
+        /// the right configuration, so use MasterReset instead.
         /// </remarks>
         public void Full_DDS_Reset()
         {
