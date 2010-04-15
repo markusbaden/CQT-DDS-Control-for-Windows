@@ -55,5 +55,16 @@ namespace DDSControl
             }
             return output.ToArray();
         }
+
+        public static byte Checksum(Message Msg)
+        {
+            int checksum = 0;
+            for (int k = 0; k < Msg.Count; k++)
+            {
+                checksum += Msg[k];
+            }
+            checksum = checksum % 255;
+            return (byte)checksum;
+        }
     }
 }

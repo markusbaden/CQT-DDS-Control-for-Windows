@@ -101,7 +101,7 @@ namespace DDSControl
         internal void Full_DDS_Reset()
         {
             log.Info("Sending Full_DDS_Reset command");
-            Message fullResetMessage = new Message(new byte[] {0x03,0x08,0x0b});
+            Message fullResetMessage = new Message(new byte[] { 0x03, 0x08 });
             sendToEP1(fullResetMessage);
         }
 
@@ -115,14 +115,14 @@ namespace DDSControl
         internal void Start_Transfer()
         {
             if (log.IsInfoEnabled) { log.Info("Sending Start_Transfer command"); }
-            Message msg = new Message(new byte[] { 0x03, 0x03, 0x06 });
+            Message msg = new Message(new byte[] { 0x03, 0x03});
             sendToEP1(msg);
         }
 
         internal void Stop_Transfer()
         {
             if (log.IsInfoEnabled) { log.Info("Sending Stop_Transfer command"); }
-            Message msg = new Message(new byte[] { 0x03, 0x04, 0x07 });
+            Message msg = new Message(new byte[] { 0x03, 0x04});
             sendToEP1(msg);
         }
         #endregion
@@ -446,7 +446,15 @@ namespace DDSControl
 
         private void sendToEP1(Message message)
         {
-            log.DebugFormat("Sending message to EP1: {0}", message.ToString());
+            if (log.IsDebugEnabled) { log.DebugFormat("Recieved message to send to EP1{0}", message.ToString()); }
+
+            byte checksum = DDSUtils.Checksum(message);
+
+            if (log.IsDebugEnabled) { log.DebugFormat("Appending checksum byte {0} to message", checksum); }
+
+            message.Add(checksum);
+            
+            if (log.IsDebugEnabled) { log.DebugFormat("Sending message to EP1: {0}", message.ToString()); }
             device.SendDataToEP1(message.ToArray());
         }
 
