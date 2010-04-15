@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.comboBoxModulationMode = new System.Windows.Forms.ComboBox();
-            this.labelChannelSelection = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.labelChannelWords = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.comboBoxModulationLevels = new System.Windows.Forms.ComboBox();
+            this.comboBoxChannel = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // comboBoxModulationMode
@@ -50,15 +50,6 @@
             this.comboBoxModulationMode.TabIndex = 13;
             this.comboBoxModulationMode.Text = "fm";
             // 
-            // labelChannelSelection
-            // 
-            this.labelChannelSelection.AutoSize = true;
-            this.labelChannelSelection.Location = new System.Drawing.Point(116, 76);
-            this.labelChannelSelection.Name = "labelChannelSelection";
-            this.labelChannelSelection.Size = new System.Drawing.Size(13, 13);
-            this.labelChannelSelection.TabIndex = 12;
-            this.labelChannelSelection.Text = "0";
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -68,19 +59,10 @@
             this.label5.TabIndex = 11;
             this.label5.Text = "Channel";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(116, 48);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(13, 13);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "2";
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 48);
+            this.label3.Location = new System.Drawing.Point(3, 38);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(93, 13);
             this.label3.TabIndex = 9;
@@ -98,7 +80,7 @@
             // labelChannelWords
             // 
             this.labelChannelWords.AutoSize = true;
-            this.labelChannelWords.Location = new System.Drawing.Point(3, 107);
+            this.labelChannelWords.Location = new System.Drawing.Point(3, 102);
             this.labelChannelWords.Name = "labelChannelWords";
             this.labelChannelWords.Size = new System.Drawing.Size(80, 13);
             this.labelChannelWords.TabIndex = 15;
@@ -107,22 +89,46 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 76);
+            this.label2.Location = new System.Drawing.Point(3, 65);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(46, 13);
             this.label2.TabIndex = 14;
             this.label2.Text = "Channel";
             // 
+            // comboBoxModulationLevels
+            // 
+            this.comboBoxModulationLevels.FormattingEnabled = true;
+            this.comboBoxModulationLevels.Items.AddRange(new object[] {
+            "2"});
+            this.comboBoxModulationLevels.Location = new System.Drawing.Point(119, 35);
+            this.comboBoxModulationLevels.Name = "comboBoxModulationLevels";
+            this.comboBoxModulationLevels.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxModulationLevels.TabIndex = 16;
+            this.comboBoxModulationLevels.Text = "2";
+            // 
+            // comboBoxChannel
+            // 
+            this.comboBoxChannel.FormattingEnabled = true;
+            this.comboBoxChannel.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2"});
+            this.comboBoxChannel.Location = new System.Drawing.Point(119, 62);
+            this.comboBoxChannel.Name = "comboBoxChannel";
+            this.comboBoxChannel.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxChannel.TabIndex = 17;
+            this.comboBoxChannel.Text = "0";
+            // 
             // ModulationUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.comboBoxChannel);
+            this.Controls.Add(this.comboBoxModulationLevels);
             this.Controls.Add(this.labelChannelWords);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBoxModulationMode);
-            this.Controls.Add(this.labelChannelSelection);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
             this.Name = "ModulationUserControl";
@@ -135,12 +141,12 @@
         #endregion
 
         private System.Windows.Forms.ComboBox comboBoxModulationMode;
-        private System.Windows.Forms.Label labelChannelSelection;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelChannelWords;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox comboBoxModulationLevels;
+        private System.Windows.Forms.ComboBox comboBoxChannel;
     }
 }

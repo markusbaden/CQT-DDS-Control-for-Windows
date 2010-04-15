@@ -21,6 +21,7 @@ namespace DDSControl
         {
             InitializeComponent();
             levels = 2;
+            comboBoxModulationLevels.TextChanged += new EventHandler(handleLevelChange);
             populateChannelWordBoxes();
         }
 
@@ -30,7 +31,7 @@ namespace DDSControl
             output.Mode = comboBoxModulationMode.Text;
             output.Levels = levels;
             output.ChannelWords = channelWords;
-            output.Channel = 0;
+            output.Channel = Convert.ToInt32(comboBoxChannel.Text);
             return output;
         }
 
@@ -42,7 +43,7 @@ namespace DDSControl
                 this.Controls.Add(channelWordBoxes[k]);
                 
                 System.Drawing.Point location = new Point();
-                location.X = labelChannelSelection.Location.X;
+                location.X = comboBoxChannel.Location.X;
                 location.Y = labelChannelWords.Location.Y + k*25;
                 channelWordBoxes[k].Location = location;
                 channelWordBoxes[k].Size = comboBoxModulationMode.Size;
@@ -64,6 +65,24 @@ namespace DDSControl
                 channelWords[senderbox.Number] = Convert.ToDouble(senderbox.Text);
             }
             catch (Exception)
+            {
+
+            }
+        }
+
+        public void handleLevelChange(object sender, EventArgs e)
+        {
+            ComboBox box = (ComboBox)sender;
+
+            // Implement something that checks whether levels are allowed
+            // And then remove the last n channel words (or add some)
+            try
+            {
+                levels = Convert.ToInt32(box.Text);
+                populateChannelWordBoxes();
+            }
+
+            catch
             {
 
             }
