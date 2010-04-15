@@ -206,7 +206,6 @@ namespace DDSControl
             initialization.Add(messageFactory.SetModeMessage("singletone"));
             initialization.Add(messageFactory.SetLevelMessage(2));
 
-
             sendToEP2(initialization);
         }
 
@@ -343,6 +342,24 @@ namespace DDSControl
             if (log.IsInfoEnabled) { log.Info(channelWords.ToString()); }
 
             sendToEP2(messageFactory.SetModulationMessage(Channel, Levels, ModulationType, ChannelWordList));
+        }
+
+        public void SetFrequencyList(params double[] Frequency)
+        {
+            Stop_Transfer();
+
+            Message msg = new Message();
+            msg.Add(messageFactory.SetFrequencyMessage(Frequency[0]));
+            int segmentLength = msg.Count;
+
+            for (int k = 1; k < Frequency.Length; k++)
+            {
+                msg.Add(messageFactory.SetFrequencyMessage(Frequency[k]));
+            }
+
+            ListplayMode(segmentLength);
+            StartListplayMode();
+            sendToEP2(msg);
         }
         
         #region Functions for sending and receiving messages
