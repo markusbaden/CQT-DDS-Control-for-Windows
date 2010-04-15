@@ -59,7 +59,7 @@ namespace DDSControl
             
             Expect.Once.On(mockDevice).Method("SendDataToEP1").With(call.ToArray());
 
-            dds.FullDDSReset();
+            dds.Full_DDS_Reset();
 
             mocks.VerifyAllExpectationsHaveBeenMet();
         }

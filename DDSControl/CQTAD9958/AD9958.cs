@@ -86,25 +86,34 @@ namespace DDSControl
             get { return writePatternCSR; }
         }
 
+        #region EP1OUT Commands
+
         /// <summary>
-        /// Issue a full reset of the DDS.
+        /// Issue a Full_DDS_Reset. Avoid to use directly, use MasterReset instead.
         /// </summary>
-        /// <remarks> The full reset is done by sending a "Full_DDS_Reset" to the EP1IN of the USB microcontroller</remarks>
-        public void FullDDSReset()
+        /// <remarks>
+        /// This is an command defined on the firmware of the EZ USB FX2. It carries out a master reset,
+        /// initializes the DDS into the bytewise transfer mode and prepares the USB engine into a mode
+        /// which enables EP2 transfers and switches on the IOUPDATE mode.
+        /// </remarks>
+        public void Full_DDS_Reset()
         {
             log.Info("Performing FullDDSReset");
             Message fullResetMessage = new Message(new byte[] {0x03,0x08,0x0b});
             sendToEP1(fullResetMessage);
         }
 
+        #endregion
+
         /// <summary>
-        /// Do a master reset on the DDS, that is a FullDDSReset plus intialization
+        /// Do a master reset on the DDS, that is a FullDDSReset plus setting mode to singletone and
+        /// levels to 2, which configures the right transfer mode on the DDS.
         /// </summary>
         public void MasterReset()
         {
             if (log.IsInfoEnabled) { log.Info("Performing a master reset."); }
 
-            FullDDSReset();
+            Full_DDS_Reset();
 
             log.Info("Initializing DDS as part of master reset.");
             
@@ -434,7 +443,6 @@ namespace DDSControl
 
         #endregion
 
-
         #region Functions for calculating words
         
         private int calculateFrequencyTuningWord(double frequency)
@@ -469,7 +477,7 @@ namespace DDSControl
         
 
 
-        #region Some byte patterns
+        #region Byte patterns
 
         /// <summary>
         /// Dictionary thar stores the byte that corresponds to select channel 0,1 or both
@@ -567,6 +575,7 @@ namespace DDSControl
 
         #endregion
 
+        #region Initialization routines
 
         private void initializeRegisters()
         {
@@ -648,6 +657,8 @@ namespace DDSControl
             // <=> POW = PhaseOffset * phaseStep
             phaseStep = Math.Pow(2, 14) / 360;
         }
+
+        #endregion
 
     }
 }
