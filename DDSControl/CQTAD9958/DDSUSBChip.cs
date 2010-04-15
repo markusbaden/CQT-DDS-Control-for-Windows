@@ -7,8 +7,12 @@ using CyUSB;
 namespace DDSControl
 {
     /// <summary>
-    /// Class implementing the functionality provided by Christian Kurtsiefers firmware on the CQT DDS board.
-    /// All interaction with the EZ USB Chip is done via the CyUSB.dll provided by Cypress.
+    /// Class implementing the Endpoint functionality provided by Christian Kurtsiefers firmware on the CQT DDS board.
+    /// All interaction with the EZ USB Chip is done via the CyUSB.dll provided by Cypress. This class is essentially 
+    /// a wrapper around the functions provided by cypress for transferring data. It is totally agnostic to any 
+    /// functionality contained in the data it forwards to the specific end points. It is only intended to pass 
+    /// data on to the cypress device. In addition it also forwards data that is provided by the device when it identifies
+    /// itself (such as its serial number).
     /// </summary>
     public class DDSUSBChip : IDDSUSBChip
     {
@@ -46,11 +50,6 @@ namespace DDSControl
         {
             int length = Data.Length;
             EP2OUT.XferData(ref Data, ref length);
-        }
-
-        public void Full_DDS_Reset()
-        {
-
         }
 
         public string SerialNumber

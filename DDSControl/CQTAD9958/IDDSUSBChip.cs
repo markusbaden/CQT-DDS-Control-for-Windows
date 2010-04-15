@@ -7,7 +7,10 @@ using CyUSB;
 namespace DDSControl
 {
     /// <summary>
-    /// Interface abstracting the functionality provided by Christian Kurtsiefer's firmware.
+    /// Interface abstracting the endpoint functionality provided by Christian Kurtsiefer's firmware.
+    /// The interface just specifies transfer methods to / from the different endpoints. All the 
+    /// different commands in Christian's firmware are implemented some where else. In addition that
+    /// interface forwards information that is provided via USB (when the device identifies itself)
     /// The EZ USB Chip is called via the CyUSB.dll provided by Cypress. This interface makes
     /// calls to the microcontroller unit testable.
     /// </summary>
@@ -19,12 +22,6 @@ namespace DDSControl
         void ReceiveDataFromEP1(ref byte[] Data);
         void SendDataToEP2(byte[] Data);
         
-        #endregion
-
-        #region Functions corresponding to the EP1 commands
-
-        void Full_DDS_Reset();
-
         #endregion
 
         #region Information provided via USB
