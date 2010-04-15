@@ -119,6 +119,14 @@ namespace DDSControl
             sendToEP1(msg);
         }
 
+
+        /// <summary>
+        /// Disable transfer via EP2OUT
+        /// </summary>
+        /// <remarks> 
+        /// This is a command defined in the firmware of the EZ USB chip. It disables data transfer via EP2OUT (which stops
+        /// the GPIF routine).
+        /// </remarks>
         internal void Stop_Transfer()
         {
             if (log.IsInfoEnabled) { log.Info("Sending Stop_Transfer command"); }
@@ -126,6 +134,14 @@ namespace DDSControl
             sendToEP1(msg);
         }
         #endregion
+
+        internal void ListplayMode(int SegmentLength)
+        {
+            if (log.IsInfoEnabled) { log.InfoFormat("Sending ListplayMode command with segment length {0}", SegmentLength); }
+            Message msg = new Message(0x04, 0x0b);
+            msg.Add((byte)SegmentLength);
+            sendToEP1(msg);
+        }
 
         /// <summary>
         /// Do a master reset on the DDS, that is a FullDDSReset plus setting mode to singletone and

@@ -20,6 +20,9 @@ namespace DDSControl
         private Message fullDDSReset;
         private Message startTransfer;
         private Message stopTransfer;
+        private Message listPlayMode10bytes;
+        private Message startListPlayMode;
+        private Message stopListPlayMode;
         
         [SetUp]
         public void Initialize()
@@ -53,6 +56,16 @@ namespace DDSControl
         
             // Stop Transfer via EP1
             stopTransfer = new Message(0x03, 0x04, 0x07);
+        
+            // ListplayMode via EP1 (10 byte length)
+            listPlayMode10bytes = new Message(0x04, 0x0b, 0x0a, 0x19);
+
+            // StartListplayMode via EP1
+            startListPlayMode = new Message(0x03, 0x0c, 0x0f);
+            
+            // StopListplay mode via EP1
+            stopListPlayMode = new Message(0x03, 0x0e, 0x11);
+        
         }
 
         [Test]
@@ -61,11 +74,8 @@ namespace DDSControl
             // Define call
             Message call = new Message();
             call.Add(fullDDSReset);
-            
             Expect.Once.On(mockDevice).Method("SendDataToEP1").With(call.ToArray());
-
             dds.Full_DDS_Reset();
-
             mocks.VerifyAllExpectationsHaveBeenMet();
         }
 
@@ -86,6 +96,16 @@ namespace DDSControl
             call.Add(stopTransfer);
             Expect.Once.On(mockDevice).Method("SendDataToEP1").With(call.ToArray());
             dds.Stop_Transfer();
+            mocks.VerifyAllExpectationsHaveBeenMet();
+        }
+
+        [Test]
+        public void TestListplayMode()
+        {
+            Message call = new Message();
+            call.Add(listPlayMode10bytes);
+            Expect.Once.On(mockDevice).Method("SendDataToEP1").With(call.ToArray());
+            dds.ListplayMode(10);
             mocks.VerifyAllExpectationsHaveBeenMet();
         }
 
