@@ -116,6 +116,12 @@ namespace DDSControl
     }
 
     [TestFixture]
+    public class TestBasicCommands
+    {
+        
+    }
+
+    [TestFixture]
     public class TestFrequencyCommands
     {
         private AD9958 dds;

@@ -74,7 +74,7 @@ namespace DDSControl
             }
             else
             {
-                #warning DDS Control GUI performs some functionality of the AD9958 class when setting channels
+                #warning DControlDS  GUI performs some functionality of the AD9958 class when setting channels
                 dds.SelectChannelToWrite(ChannelNumber);
                 dds.SetFrequency(Values["frequency"]);
                 dds.SetAmplitude((int)Values["amplitude"]);
