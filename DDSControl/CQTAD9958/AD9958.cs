@@ -87,6 +87,7 @@ namespace DDSControl
         }
 
         /// Naming in the following region is consistent with the firmware naming of Christian
+        /// These commands should not be called directly but are to be unit tested, hence they are internal.
         #region EP1OUT Commands
 
         /// <summary>
@@ -114,7 +115,7 @@ namespace DDSControl
         /// </remarks>
         internal void Start_Transfer()
         {
-            if (log.IsInfoEnabled) { log.Info("Sending Start_Transfer command"); }
+            if (log.IsInfoEnabled) { log.Info("Enabling transfer via EP2OUT"); }
             Message msg = new Message(new byte[] { 0x03, 0x03});
             sendToEP1(msg);
         }
@@ -129,11 +130,10 @@ namespace DDSControl
         /// </remarks>
         internal void Stop_Transfer()
         {
-            if (log.IsInfoEnabled) { log.Info("Sending Stop_Transfer command"); }
+            if (log.IsInfoEnabled) { log.Info("Disabling transfer via EP2OUT"); }
             Message msg = new Message(new byte[] { 0x03, 0x04});
             sendToEP1(msg);
         }
-        #endregion
 
         /// <summary>
         /// Select ListplayMode with a given segment length
@@ -147,11 +147,27 @@ namespace DDSControl
         /// one can issue a logical high to P2.
         internal void ListplayMode(int SegmentLength)
         {
-            if (log.IsInfoEnabled) { log.InfoFormat("Sending ListplayMode command with segment length {0}", SegmentLength); }
+            if (log.IsInfoEnabled) { log.InfoFormat("Configuring listplay mode with segment length {0}", SegmentLength); }
             Message msg = new Message(0x04, 0x0b);
             msg.Add((byte)SegmentLength);
             sendToEP1(msg);
         }
+
+        /// <summary>
+        /// Start list play mode.
+        /// </summary>
+        /// <remarks>
+        /// This is a command that is defined in the firmware of the EZ USB chip. It starts the GPIF engine when
+        /// listplay mode has been chosen.
+        internal void StartListplayMode()
+        {
+            if (log.IsInfoEnabled) { log.Info("Starting listplay mode"); }
+            Message msg = new Message(0x03, 0x0c);
+            sendToEP1(msg);
+        }
+
+
+        #endregion
 
         /// <summary>
         /// Do a master reset on the DDS, that is a FullDDSReset plus setting mode to singletone and
