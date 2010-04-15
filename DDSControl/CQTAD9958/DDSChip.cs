@@ -24,7 +24,5 @@ namespace DDSControl
         }
 
         protected IDDSUSBChip device;
-        protected Dictionary<string, DDSRegister> registerByShortName;
-    
     }
 }
