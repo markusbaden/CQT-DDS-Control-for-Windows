@@ -14,6 +14,7 @@ namespace DDSControl
     {
         private CyUSBDevice cyUSBDevice;
         private CyUSBEndPoint EP1OUT;
+        private CyUSBEndPoint EP1IN;
         private CyUSBEndPoint EP2OUT;
         
         public DDSMicrocontroller(CyUSBDevice CyUSBDevice)
@@ -22,6 +23,7 @@ namespace DDSControl
             // Switch to right interface
             cyUSBDevice.AltIntfc = 1;
             EP1OUT = cyUSBDevice.EndPointOf(0x01);
+            EP1IN = cyUSBDevice.EndPointOf(0x81);
             // Define Endpoints
             EP2OUT = cyUSBDevice.EndPointOf(0x02);
         }
@@ -42,6 +44,12 @@ namespace DDSControl
         {
             int length = Data.Length;
             EP1OUT.XferData(ref Data, ref length);
+        }
+
+        public void ReceiveDataFromEP1(ref byte[] Data)
+        {
+            int length = Data.Length;
+            EP1IN.XferData(ref Data, ref length);
         }
 
         public void SendDataToEP2(byte[] Data)

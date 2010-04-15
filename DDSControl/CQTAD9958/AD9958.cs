@@ -29,6 +29,14 @@ namespace DDSControl
             get { return referenceAmplitude; }
         }
 
+        public void GetReferenceAmplitudes()
+        {
+            MasterReset();
+            referenceAmplitude = new List<double>();
+            sendToEP1(new Message(new byte[] { 0x04, 0x99, 0x64, 0x00 }));
+            Message amplitudes = receiveFromEP1(6);
+        }
+
         private List<double> referenceAmplitude;
 
         #endregion
@@ -388,6 +396,13 @@ namespace DDSControl
             device.SendDataToEP2(message.ToArray());
         }
 
+        private Message receiveFromEP1(int Length)
+        {
+            byte[] bytes = new byte[Length];
+            device.ReceiveDataFromEP1(ref bytes);
+            return new Message(bytes);
+        }
+
         #endregion
 
         private int calculateFrequencyTuningWord(double frequency)
@@ -502,11 +517,7 @@ namespace DDSControl
         private void initializeAD9958()
         {
             initializeRegisters();
-            referenceAmplitude = new List<double>();
-            for (int k = 0; k < 2; k++)
-            {
-                referenceAmplitude.Add(0);
-            }
+
             defineChannelPattern();
             defineAmpFreqPhasePattern();
             defineLevelPattern();

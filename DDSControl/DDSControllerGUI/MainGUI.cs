@@ -114,5 +114,11 @@ namespace DDSControl
             ModulationSetting setting = modulationUserControl1.ModulationSetting;
             selectedDDS.SetModulation(setting.Channel, setting.Levels, setting.Mode, setting.ChannelWords.ToArray());
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            AD9958 selectedDDS = ddsList[deviceListBox.SelectedIndex];
+            selectedDDS.GetReferenceAmplitudes();
+        }
     }
 }

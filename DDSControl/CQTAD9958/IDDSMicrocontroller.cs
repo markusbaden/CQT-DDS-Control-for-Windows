@@ -13,6 +13,7 @@ namespace DDSControl
     public interface IDDSMicrocontroller
     {
         void SendDataToEP1(byte[] Data);
+        void ReceiveDataFromEP1(ref byte[] Data);
         void SendDataToEP2(byte[] Data);
         string Product { get; }
         string SerialNumber { get; }

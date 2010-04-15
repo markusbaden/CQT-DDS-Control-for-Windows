@@ -32,17 +32,18 @@
             this.fullResetButton = new System.Windows.Forms.Button();
             this.channelTabControl = new System.Windows.Forms.TabControl();
             this.channelZeroTabPage = new System.Windows.Forms.TabPage();
+            this.channelUserControl1 = new DDSControl.ChannelUserControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.channelUserControl2 = new DDSControl.ChannelUserControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.dualChannelUserControl1 = new DDSControl.DualChannelUserControl();
             this.setChannelButton = new System.Windows.Forms.Button();
             this.tabControlMode = new System.Windows.Forms.TabControl();
             this.tabSingletone = new System.Windows.Forms.TabPage();
             this.tabModulation = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.channelUserControl1 = new DDSControl.ChannelUserControl();
-            this.channelUserControl2 = new DDSControl.ChannelUserControl();
-            this.dualChannelUserControl1 = new DDSControl.DualChannelUserControl();
             this.modulationUserControl1 = new DDSControl.ModulationUserControl();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.channelTabControl.SuspendLayout();
             this.channelZeroTabPage.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -92,6 +93,13 @@
             this.channelZeroTabPage.Text = "Channel 0";
             this.channelZeroTabPage.UseVisualStyleBackColor = true;
             // 
+            // channelUserControl1
+            // 
+            this.channelUserControl1.Location = new System.Drawing.Point(6, 6);
+            this.channelUserControl1.Name = "channelUserControl1";
+            this.channelUserControl1.Size = new System.Drawing.Size(224, 88);
+            this.channelUserControl1.TabIndex = 0;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.channelUserControl2);
@@ -103,6 +111,13 @@
             this.tabPage2.Text = "Channel 1";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // channelUserControl2
+            // 
+            this.channelUserControl2.Location = new System.Drawing.Point(6, 6);
+            this.channelUserControl2.Name = "channelUserControl2";
+            this.channelUserControl2.Size = new System.Drawing.Size(224, 88);
+            this.channelUserControl2.TabIndex = 1;
+            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.dualChannelUserControl1);
@@ -113,6 +128,13 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Both";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // dualChannelUserControl1
+            // 
+            this.dualChannelUserControl1.Location = new System.Drawing.Point(6, 6);
+            this.dualChannelUserControl1.Name = "dualChannelUserControl1";
+            this.dualChannelUserControl1.Size = new System.Drawing.Size(241, 72);
+            this.dualChannelUserControl1.TabIndex = 0;
             // 
             // setChannelButton
             // 
@@ -158,6 +180,13 @@
             this.tabModulation.Text = "Modulation";
             this.tabModulation.UseVisualStyleBackColor = true;
             // 
+            // modulationUserControl1
+            // 
+            this.modulationUserControl1.Location = new System.Drawing.Point(6, 6);
+            this.modulationUserControl1.Name = "modulationUserControl1";
+            this.modulationUserControl1.Size = new System.Drawing.Size(243, 239);
+            this.modulationUserControl1.TabIndex = 7;
+            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(52, 251);
@@ -168,39 +197,22 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // channelUserControl1
+            // button2
             // 
-            this.channelUserControl1.Location = new System.Drawing.Point(6, 6);
-            this.channelUserControl1.Name = "channelUserControl1";
-            this.channelUserControl1.Size = new System.Drawing.Size(224, 88);
-            this.channelUserControl1.TabIndex = 0;
-            // 
-            // channelUserControl2
-            // 
-            this.channelUserControl2.Location = new System.Drawing.Point(6, 6);
-            this.channelUserControl2.Name = "channelUserControl2";
-            this.channelUserControl2.Size = new System.Drawing.Size(224, 88);
-            this.channelUserControl2.TabIndex = 1;
-            // 
-            // dualChannelUserControl1
-            // 
-            this.dualChannelUserControl1.Location = new System.Drawing.Point(6, 6);
-            this.dualChannelUserControl1.Name = "dualChannelUserControl1";
-            this.dualChannelUserControl1.Size = new System.Drawing.Size(241, 72);
-            this.dualChannelUserControl1.TabIndex = 0;
-            // 
-            // modulationUserControl1
-            // 
-            this.modulationUserControl1.Location = new System.Drawing.Point(6, 6);
-            this.modulationUserControl1.Name = "modulationUserControl1";
-            this.modulationUserControl1.Size = new System.Drawing.Size(243, 239);
-            this.modulationUserControl1.TabIndex = 7;
+            this.button2.Location = new System.Drawing.Point(73, 154);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 14;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // MainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(943, 491);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.tabControlMode);
             this.Controls.Add(this.fullResetButton);
             this.Controls.Add(this.deviceListBox);
@@ -235,6 +247,7 @@
         private System.Windows.Forms.TabPage tabModulation;
         private System.Windows.Forms.Button button1;
         private ModulationUserControl modulationUserControl1;
+        private System.Windows.Forms.Button button2;
 
     }
 }
