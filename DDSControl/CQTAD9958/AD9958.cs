@@ -135,6 +135,16 @@ namespace DDSControl
         }
         #endregion
 
+        /// <summary>
+        /// Select ListplayMode with a given segment length
+        /// </summary>
+        /// <param name="SegmentLength">Length of each segment (must lie in [1,128])</param>
+        /// <remarks>
+        /// This is a command that is defined in the firmware of the EZ USB chip. It selects the mode where data, the list, is
+        /// transferred into the RAM buffer in the USB device. After starting this mode a segment of the list of length SegmentLength
+        /// is transferred into the DDS upon receiving a transition from logical low to high on P3, followed by an IOUpdate.
+        /// Once the end of the list in the RAM is reached the buffer wraps around. To reset the list back to the first segment
+        /// one can issue a logical high to P2.
         internal void ListplayMode(int SegmentLength)
         {
             if (log.IsInfoEnabled) { log.InfoFormat("Sending ListplayMode command with segment length {0}", SegmentLength); }
