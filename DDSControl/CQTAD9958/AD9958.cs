@@ -14,21 +14,35 @@ namespace DDSControl
 
         #region DDSChip members
         
+        /// <summary>
+        /// Description of the device, i.e. the product information provided via USB.
+        /// </summary>
         public override string Description
         {
             get { return device.Product; }
         }
         
+        /// <summary>
+        /// Serial number of the device, i.e. the serial number information provided via USB.
+        /// </summary>
         public override string SerialNumber
         {
             get { return device.SerialNumber; }
         }
 
+        /// <summary>
+        /// List of reference amplitudes for the different channels at 10 MHz. These are stored in the firmware of the 
+        /// USB controller when building the device.
+        /// </summary>
         public override List<double> ReferenceAmplitude
         {
             get { return referenceAmplitude; }
         }
 
+        /// <summary>
+        /// Function for debugging the way the reference amplitudes are extracted via EP1. Does not work
+        /// yet and once it will work it will no longer be public.
+        /// </summary>
         public void GetReferenceAmplitudes()
         {
             MasterReset();
@@ -37,28 +51,45 @@ namespace DDSControl
             Message amplitudes = receiveFromEP1(6);
         }
 
+
+        /// <summary>
+        /// Private member storing the reference amplitudes of the different channels at 10MHz.
+        /// </summary>
         private List<double> referenceAmplitude;
 
         #endregion
 
+        /// <summary>
+        /// List of supported moudlation modes.
+        /// </summary>
         public List<string> SupportedModulationModes
         {
             get { return ampFreqPhasePatternCFR.Keys.ToList(); }
         }
 
+        /// <summary>
+        /// List of supported modulation levels.
+        /// </summary>
         public List<int> SupportedModulationLevels
         {
             get { return levelPatternFR1.Keys.ToList(); }
         }
 
+        /// <summary>
+        /// Byte pattern in the channel select register that corresponds to the transfer mode
+        /// (i.e. with no channel selected). This is combined with the bits corresponding to 
+        /// which channel are selected to generate the call the channel select register.
+        /// Intended for debugging. Consult data sheet for what it means.
+        /// </summary>
         public byte WritePatternCSR
         {
             get { return writePatternCSR; }
         }
 
         /// <summary>
-        /// Send full reset command via Endpoint 1.
+        /// Issue a full reset of the DDS.
         /// </summary>
+        /// <remarks> The full reset is done by sending a "Full_DDS_Reset" to the EP1IN of the USB microcontroller</remarks>
         public void FullDDSReset()
         {
             log.Info("Performing FullDDSReset");
@@ -69,7 +100,6 @@ namespace DDSControl
         /// <summary>
         /// Do a master reset on the DDS, that is a FullDDSReset plus intialization
         /// </summary>
-
         public void MasterReset()
         {
             if (log.IsInfoEnabled) { log.Info("Performing a master reset."); }
@@ -186,25 +216,25 @@ namespace DDSControl
 
             Message msg = new Message();
             msg.Add(generateSetLevelMessage(2));
-
             msg.Add(generateSelectChannelMessage(2));
-
             msg.Add(generateSetModeMessage("singletone"));
-
             msg.Add(generateSelectChannelMessage(0));
-
             msg.Add(generateSetFrequencyMessage(Frequency));
-
             msg.Add(generateSetPhaseMessage(0));
-
             msg.Add(generateSelectChannelMessage(1));
-
             msg.Add(generateSetFrequencyMessage(Frequency));
-
             msg.Add(generateSetPhaseMessage(RelativePhase-phaseShiftOnBoard));
+
             sendToEP2(msg);
         }
 
+        /// <summary>
+        /// Set DDS to modulation mode via the 4 bit register.
+        /// </summary>
+        /// <param name="Channel">Channel which should be modulated</param>
+        /// <param name="Levels">Number of modulation levels</param>
+        /// <param name="ModulationType">Modulation type, e.g. fm, am, pm</param>
+        /// <param name="ChannelWordList">List of channel words, e.g. frequencies or phases.</param>
         public void SetModulation(int Channel, int Levels, string ModulationType, params double[] ChannelWordList)
         {
             if (log.IsInfoEnabled)
@@ -381,14 +411,13 @@ namespace DDSControl
 
         #endregion
 
-        #region Functions for sending messages
+        #region Functions for sending and receiving messages
 
         private void sendToEP1(Message message)
         {
             log.DebugFormat("Sending message to EP1: {0}", message.ToString());
             device.SendDataToEP1(message.ToArray());
         }
-
 
         private void sendToEP2(Message message)
         {
@@ -405,6 +434,9 @@ namespace DDSControl
 
         #endregion
 
+
+        #region Functions for calculating words
+        
         private int calculateFrequencyTuningWord(double frequency)
         {
             return (int)(frequency * frequencyStep);
@@ -428,6 +460,8 @@ namespace DDSControl
                 moduloPhase = moduloPhase + 360;
             return moduloPhase;
         }
+
+        #endregion
 
         private double clockFrequency = 500e6;
         private double frequencyStep;
@@ -507,6 +541,11 @@ namespace DDSControl
             initializeAD9958();
         }
 
+        /// <summary>
+        /// Create a ADD9958 by looking up a specific connected device by number. This is not a particularly 
+        /// reliable method since the order of the devices depends on the order in which they have been pugged in
+        /// </summary>
+        /// <param name="DeviceNumber">Device number.</param>
         public AD9958(int DeviceNumber)
         {
             USBDeviceList deviceList = new USBDeviceList(CyConst.DEVICES_CYUSB);
