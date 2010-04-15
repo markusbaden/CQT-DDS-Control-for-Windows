@@ -7,8 +7,8 @@ using CyUSB;
 namespace DDSControl
 {
     /// <summary>
-    /// Implements the ICQTUSBDevice interface and is thus a representation
-    /// of the USB DDS that can be mocked.
+    /// Class implementing the functionality provided by Christian Kurtsiefers firmware on the CQT DDS board.
+    /// All interaction with the EZ USB Chip is done via the CyUSB.dll provided by Cypress.
     /// </summary>
     public class DDSUSBChip : IDDSUSBChip
     {
@@ -20,25 +20,15 @@ namespace DDSControl
         public DDSUSBChip(CyUSBDevice CyUSBDevice)
         {
             cyUSBDevice = CyUSBDevice;
-            // Switch to right interface
+            // Switch to interface 1  which provides several Endpoints
             cyUSBDevice.AltIntfc = 1;
+            // Define Endpoints
             EP1OUT = cyUSBDevice.EndPointOf(0x01);
             EP1IN = cyUSBDevice.EndPointOf(0x81);
-            // Define Endpoints
             EP2OUT = cyUSBDevice.EndPointOf(0x02);
         }
 
         #region ICQTUSBDevice Members
-
-        public string SerialNumber
-        {
-            get { return cyUSBDevice.SerialNumber; }
-        }
-        
-        public string Product
-        {
-            get { return cyUSBDevice.Product; }
-        }
 
         public void SendDataToEP1(byte[] Data)
         {
@@ -56,6 +46,21 @@ namespace DDSControl
         {
             int length = Data.Length;
             EP2OUT.XferData(ref Data, ref length);
+        }
+
+        public void Full_DDS_Reset()
+        {
+
+        }
+
+        public string SerialNumber
+        {
+            get { return cyUSBDevice.SerialNumber; }
+        }
+
+        public string Product
+        {
+            get { return cyUSBDevice.Product; }
         }
 
         #endregion
