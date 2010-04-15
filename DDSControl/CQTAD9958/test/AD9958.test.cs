@@ -120,6 +120,16 @@ namespace DDSControl
         }
 
         [Test]
+        public void TestStopListplayMode()
+        {
+            Message call = new Message();
+            call.Add(stopListPlayMode);
+            Expect.Once.On(mockDevice).Method("SendDataToEP1").With(call.ToArray());
+            dds.StopListplayMode();
+            mocks.VerifyAllExpectationsHaveBeenMet();
+        }
+
+        [Test]
         public void TestMasterReset()
         {
             Message fullResetCall = new Message();

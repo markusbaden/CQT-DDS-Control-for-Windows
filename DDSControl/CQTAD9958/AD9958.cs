@@ -154,11 +154,12 @@ namespace DDSControl
         }
 
         /// <summary>
-        /// Start list play mode.
+        /// Start listplay mode.
         /// </summary>
         /// <remarks>
         /// This is a command that is defined in the firmware of the EZ USB chip. It starts the GPIF engine when
         /// listplay mode has been chosen.
+        /// </remarks>
         internal void StartListplayMode()
         {
             if (log.IsInfoEnabled) { log.Info("Starting listplay mode"); }
@@ -166,6 +167,19 @@ namespace DDSControl
             sendToEP1(msg);
         }
 
+        /// <summary>
+        /// Stop listplay mode
+        /// </summary>
+        /// <remarks>
+        /// This is a command that is defined in the firmware of the EZ USB chip. It stops the GPIF engine when
+        /// listplay mode has been chosen.
+        /// </remarks>
+        internal void StopListplayMode()
+        {
+            if (log.IsInfoEnabled) { log.Info("Stopping listplay mode"); }
+            Message msg = new Message(0x03, 0x0e);
+            sendToEP1(msg);
+        }
 
         #endregion
 
