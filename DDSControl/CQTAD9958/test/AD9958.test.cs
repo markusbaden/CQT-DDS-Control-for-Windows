@@ -8,7 +8,7 @@ using NMock2;
 namespace DDSControl
 {
     [TestFixture]
-    public class AD9958Tests
+    public class TestBasicCommands
     {
         private AD9958 dds;
         private Mockery mocks;
@@ -178,12 +178,6 @@ namespace DDSControl
             mocks.VerifyAllExpectationsHaveBeenMet();
             
         }
-    }
-
-    [TestFixture]
-    public class TestBasicCommands
-    {
-        
     }
 
     [TestFixture]
@@ -496,6 +490,65 @@ namespace DDSControl
             
             mocks.VerifyAllExpectationsHaveBeenMet();
         
+        }
+    }
+
+    [TestFixture]
+    public class TestLinearSweep
+    {
+        private AD9958 dds;
+        private Mockery mocks;
+        private IDDSUSBChip mockMicrocontroller;
+
+        // Select channel 0
+        private Message selectChannelZero = new Message(0x00, 0x76);
+        
+        // Call FR1, PLL=5, Modulation Level =2, sync clock disable
+        private Message setTwoLevel = new Message(0x01, 0xa8, 0x00, 0x20);
+        
+        // Call CFR, modulation mode fm, linear sweep enable, clear phase accumulator 0
+        private Message setFMLinearSweep = new Message(0x03, 0x80, 0x43, 0x00);
+        
+        // Call CFTW witch 1/500 * 2^32 = 82589936
+        private Message setStartfrequency1MHz = new Message(0x00, 0x83, 0x12, 0x70);
+        
+        // Call CW1 with 2/500 * 2^32 = 17179872
+        private Message setEndFrequency2Mhz = new Message(0x0a, 0x01, 0x06, 0x24, 0xe0);
+        
+        // Call RDW with (1e3 / 125e6) * 2^32 = 34360
+        private Message setRDW1kHz = new Message(0x08, 0x00, 0x00, 0x86, 0x38);
+        
+        // Call RSRR with both 1e-6*125e6 * 256 = 128
+        private Message setRSRR1us =new Message(0x07, 0x80, 0x80);
+
+        [SetUp]
+        public void Initialize()
+        {
+            mocks = new Mockery();
+            mockMicrocontroller = mocks.NewMock<IDDSUSBChip>();
+            dds = new AD9958(mockMicrocontroller);
+
+        }
+
+        [Test]
+        public void TestLinearUpSweep()
+        {
+            
+            Message msg = new Message();
+
+            msg.Add(selectChannelZero);
+            msg.Add(setTwoLevel);
+            msg.Add(setFMLinearSweep);
+            msg.Add(setStartfrequency1MHz);
+            msg.Add(setEndFrequency2Mhz);
+            msg.Add(setRDW1kHz);
+            msg.Add(setRSRR1us);
+
+            Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(msg.ToArray());
+
+            dds.SetLinearSweep(0, 1e6, 2e6, 1e3, 1e-6);
+        
+            mocks.VerifyAllExpectationsHaveBeenMet();
         }
     }
 }

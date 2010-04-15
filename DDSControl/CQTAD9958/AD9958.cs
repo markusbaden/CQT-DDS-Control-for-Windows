@@ -38,12 +38,11 @@ namespace DDSControl
         {
             get { return referenceAmplitude; }
         }
+        #endregion
 
         #region Private Members
 
         private AD9958MessageFactory messageFactory;
-
-        #endregion
 
         /// <summary>
         /// Private member storing the reference amplitudes of the different channels at 10MHz.
@@ -51,6 +50,8 @@ namespace DDSControl
         private List<double> referenceAmplitude;
 
         #endregion
+
+
 
         /// Naming in the following region is consistent with the firmware naming of Christian
         /// These commands should not be called directly but are to be unit tested, hence they are internal.
@@ -302,7 +303,12 @@ namespace DDSControl
             }
             if (log.IsInfoEnabled) { log.Info(channelWords.ToString()); }
 
-            sendToEP2(messageFactory.SetModulationMessage(Channel, Levels, ModulationType, ChannelWordList));
+            Message msg = new Message();
+            msg.Add(messageFactory.SelectChannelMessage(0));
+            msg.Add(messageFactory.SetLevelMessage(Levels));
+            msg.Add(messageFactory.SetModeMessage(ModulationType));
+            msg.Add(messageFactory.FillChannelWords(ModulationType, ChannelWordList));
+            sendToEP2(msg);
         }
 
         public void SetFrequencyList(params double[] Frequency)
@@ -321,6 +327,12 @@ namespace DDSControl
             ListplayMode(segmentLength);
             StartListplayMode();
             sendToEP2(msg);
+        }
+
+        public void SetLinearSweep(int Channel, double StartFrequency, double EndFrequency, double RisingDeltaFrequency, double RisingDwellTime)
+        {
+            Message msg = new Message();
+            msg.Add(messageFactory.SelectChannelMessage(0));
         }
         
         #region Functions for sending and receiving messages
@@ -396,8 +408,6 @@ namespace DDSControl
             messageFactory = new AD9958MessageFactory();
         }
         #endregion
-
-
 
     }
 }

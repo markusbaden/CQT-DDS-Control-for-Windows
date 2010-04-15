@@ -106,13 +106,9 @@ namespace DDSControl
             return msg;
         }
 
-        public Message SetModulationMessage(int Channel, int Levels, string ModulationType, params double[] ChannelWordList)
+        public Message FillChannelWords(string ModulationType, params double[] ChannelWordList)
         {
             Message msg = new Message();
-            msg.Add(SelectChannelMessage(Channel));
-            msg.Add(SetLevelMessage(Levels));
-            msg.Add(SetModeMessage(ModulationType));
-
             switch (ModulationType)
             {
                 case "fm":
@@ -185,8 +181,6 @@ namespace DDSControl
 
             return msg;
         }
-
-            
 
         #endregion
 
