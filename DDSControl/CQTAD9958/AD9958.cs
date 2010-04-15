@@ -549,7 +549,7 @@ namespace DDSControl
         public AD9958(int DeviceNumber)
         {
             USBDeviceList deviceList = new USBDeviceList(CyConst.DEVICES_CYUSB);
-            device = (new DDSMicrocontroller(deviceList[DeviceNumber] as CyUSBDevice));
+            device = (new DDSUSBChip(deviceList[DeviceNumber] as CyUSBDevice));
             initializeAD9958();
         }
 

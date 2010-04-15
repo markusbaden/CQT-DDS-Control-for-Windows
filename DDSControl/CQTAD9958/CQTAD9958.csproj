@@ -73,11 +73,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AD9958.cs" />
-    <Compile Include="DDSMicrocontroller.cs" />
+    <Compile Include="DDSUSBChip.cs" />
     <Compile Include="DDSRegister.cs" />
     <Compile Include="DDSChip.cs" />
     <Compile Include="DDSUtils.cs" />
-    <Compile Include="IDDSMicrocontroller.cs" />
+    <Compile Include="IDDSUSBChip.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="test\AD9958.test.cs" />
