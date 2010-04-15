@@ -193,15 +193,15 @@ namespace DDSControl
             Stop_Transfer();
 
             Message msg = new Message();
-            msg.Add(generateSetPhaseMessage(0));
+            msg.Add(SetPhaseMessage(0));
             int segmentLength = msg.Count;
-            msg.Add(generateSetPhaseMessage(45));
-            msg.Add(generateSetPhaseMessage(90));
-            msg.Add(generateSetPhaseMessage(135));
-            msg.Add(generateSetPhaseMessage(180));
-            msg.Add(generateSetPhaseMessage(225));
-            msg.Add(generateSetPhaseMessage(270));
-            msg.Add(generateSetPhaseMessage(315));
+            msg.Add(SetPhaseMessage(45));
+            msg.Add(SetPhaseMessage(90));
+            msg.Add(SetPhaseMessage(135));
+            msg.Add(SetPhaseMessage(180));
+            msg.Add(SetPhaseMessage(225));
+            msg.Add(SetPhaseMessage(270));
+            msg.Add(SetPhaseMessage(315));
 
             ListplayMode(segmentLength);
             StartListplayMode();
@@ -223,9 +223,9 @@ namespace DDSControl
             log.Info("Initializing DDS as part of master reset.");
             
             Message initialization = new Message();
-            initialization.Add(generateSelectChannelMessage(2));
-            initialization.Add(generateSetModeMessage("singletone"));
-            initialization.Add(generateSetLevelMessage(2));
+            initialization.Add(SelectChannelMessage(2));
+            initialization.Add(SetModeMessage("singletone"));
+            initialization.Add(SetLevelMessage(2));
 
 
             sendToEP2(initialization);
@@ -238,7 +238,7 @@ namespace DDSControl
         public void SelectChannelToWrite(int ChannelNumber)
         {
             log.InfoFormat("Selecting channel {0} to write to", ChannelNumber);
-            sendToEP2(generateSelectChannelMessage(ChannelNumber));
+            sendToEP2(SelectChannelMessage(ChannelNumber));
         }
 
         /// <summary>
@@ -250,8 +250,8 @@ namespace DDSControl
         {
             log.InfoFormat("Selecting mode {0}", Mode);
             Message msg = new Message();
-            msg.Add(generateSelectChannelMessage(2));
-            msg.Add(generateSetModeMessage(Mode));
+            msg.Add(SelectChannelMessage(2));
+            msg.Add(SetModeMessage(Mode));
             sendToEP2(msg);
         }
 
@@ -263,7 +263,7 @@ namespace DDSControl
         public void SetLevels(int Levels)
         {
             log.InfoFormat("Setting levels to {0}", Levels);
-            sendToEP2(generateSetLevelMessage(Levels));
+            sendToEP2(SetLevelMessage(Levels));
         }
 
 
@@ -276,8 +276,8 @@ namespace DDSControl
         {
             log.InfoFormat("Setting frequency of channel {0} to {1:0.000e0} Hz", ChannelNumber, Frequency);
             Message msg = new Message();
-            msg.Add(generateSelectChannelMessage(ChannelNumber));
-            msg.Add(generateSetFrequencyMessage(Frequency));
+            msg.Add(SelectChannelMessage(ChannelNumber));
+            msg.Add(SetFrequencyMessage(Frequency));
             sendToEP2(msg);
         }
 
@@ -293,7 +293,7 @@ namespace DDSControl
         public void SetFrequency(double Frequency)
         {
             log.InfoFormat("Setting frequency of current channel to {0:0.000e0}", Frequency);
-            sendToEP2(generateSetFrequencyMessage(Frequency));
+            sendToEP2(SetFrequencyMessage(Frequency));
         }
 
         /// <summary>
@@ -304,7 +304,7 @@ namespace DDSControl
         public void SetAmplitude(int AmplitudeScaleFactor)
         {
             log.InfoFormat("Setting amplitude scale factor for current channel to {0}", AmplitudeScaleFactor);
-            sendToEP2(generateSetAmplitudeMessage(AmplitudeScaleFactor));
+            sendToEP2(SetAmplitudeMessage(AmplitudeScaleFactor));
         }
 
 
@@ -329,15 +329,15 @@ namespace DDSControl
             if (log.IsInfoEnabled) { log.InfoFormat("I am assuming a phase shift on the board of {0} (sent = set - {0})", phaseShiftOnBoard); }
 
             Message msg = new Message();
-            msg.Add(generateSetLevelMessage(2));
-            msg.Add(generateSelectChannelMessage(2));
-            msg.Add(generateSetModeMessage("singletone"));
-            msg.Add(generateSelectChannelMessage(0));
-            msg.Add(generateSetFrequencyMessage(Frequency));
-            msg.Add(generateSetPhaseMessage(0));
-            msg.Add(generateSelectChannelMessage(1));
-            msg.Add(generateSetFrequencyMessage(Frequency));
-            msg.Add(generateSetPhaseMessage(RelativePhase-phaseShiftOnBoard));
+            msg.Add(SetLevelMessage(2));
+            msg.Add(SelectChannelMessage(2));
+            msg.Add(SetModeMessage("singletone"));
+            msg.Add(SelectChannelMessage(0));
+            msg.Add(SetFrequencyMessage(Frequency));
+            msg.Add(SetPhaseMessage(0));
+            msg.Add(SelectChannelMessage(1));
+            msg.Add(SetFrequencyMessage(Frequency));
+            msg.Add(SetPhaseMessage(RelativePhase-phaseShiftOnBoard));
 
             sendToEP2(msg);
         }
@@ -366,19 +366,19 @@ namespace DDSControl
             if (log.IsInfoEnabled) { log.Info(channelWords.ToString()); }
             
             Message msg = new Message();
-            msg.Add(generateSelectChannelMessage(Channel));
-            msg.Add(generateSetLevelMessage(Levels));
-            msg.Add(generateSetModeMessage(ModulationType));
+            msg.Add(SelectChannelMessage(Channel));
+            msg.Add(SetLevelMessage(Levels));
+            msg.Add(SetModeMessage(ModulationType));
 
             switch (ModulationType)
             {
                 case "fm":
-                    msg.Add(generateSetFrequencyMessage(ChannelWordList[0]));
+                    msg.Add(SetFrequencyMessage(ChannelWordList[0]));
                     byte[] channelRegisterWord = calculateFrequencyTuningWordAsBytes(ChannelWordList[1]);
-                    msg.Add(generateSetChannelWordMessage(1, channelRegisterWord));
+                    msg.Add(SetChannelWordMessage(1, channelRegisterWord));
                     break;
                 case "pm":
-                    msg.Add(generateSetPhaseMessage(ChannelWordList[0]));
+                    msg.Add(SetPhaseMessage(ChannelWordList[0]));
                     
                     // Fill the Channel Word Registers
                     // They are 4byte long and the PhaseOffsetWord only 14bit long
@@ -398,7 +398,7 @@ namespace DDSControl
 
                     // Add to zero bytes for the remaining byte registers
                     phaseByte.AddRange(new byte[] {0x00, 0x00});
-                    msg.Add(generateSetChannelWordMessage(1,phaseByte.ToArray()));
+                    msg.Add(SetChannelWordMessage(1,phaseByte.ToArray()));
                     
                     break;
                 default:
@@ -412,7 +412,7 @@ namespace DDSControl
         
         #region Functions to generate messages
 
-        private Message generateSelectChannelMessage(int ChannelNumber)
+        public Message SelectChannelMessage(int ChannelNumber)
         {
             Message msg = new Message();
             msg.Add(registerByShortName["CSR"].Address);
@@ -421,7 +421,7 @@ namespace DDSControl
             return msg;
         }
 
-        private Message generateSetChannelWordMessage(int ChannelRegisterNumber, byte[] Content)
+        public Message SetChannelWordMessage(int ChannelRegisterNumber, byte[] Content)
         {
             Message msg = new Message();
             byte addressByte = (byte)(0x0A + (ChannelRegisterNumber - 1));
@@ -433,7 +433,7 @@ namespace DDSControl
             return msg;
         }
 
-        private Message generateSetAmplitudeMessage(int AmplitudeScaleFactor)
+        public Message SetAmplitudeMessage(int AmplitudeScaleFactor)
         {
             Message msg = new Message();
             msg.Add(registerByShortName["ACR"].Address);
@@ -451,7 +451,7 @@ namespace DDSControl
             return msg;
         }
 
-        private Message generateSetFrequencyMessage(double Frequency)
+        public Message SetFrequencyMessage(double Frequency)
         {
             Message msg = new Message();
             msg.Add(registerByShortName["CFTW"].Address);
@@ -460,7 +460,7 @@ namespace DDSControl
             return msg;
         }
 
-        private Message generateSetLevelMessage(int Levels)
+        public Message SetLevelMessage(int Levels)
         {
             Message msg = new Message();
             msg.Add(registerByShortName["FR1"].Address);
@@ -475,7 +475,7 @@ namespace DDSControl
             return msg;
         }
         
-        private Message generateSetModeMessage(string Mode)
+        public Message SetModeMessage(string Mode)
         {
             Message msg = new Message();
             msg.Add(registerByShortName["CFR"].Address);
@@ -491,7 +491,7 @@ namespace DDSControl
             return msg;
         }
 
-        private Message generateSetPhaseMessage(double Phase)
+        public Message SetPhaseMessage(double Phase)
         {
 
             double moduloPhase = calculateModuloPhase(Phase);
@@ -777,6 +777,11 @@ namespace DDSControl
         }
 
         #endregion
+
+    }
+
+    public class AD9958MessageFactory
+    {
 
     }
 }
