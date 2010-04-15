@@ -118,7 +118,18 @@ namespace DDSControl
         private void button2_Click(object sender, EventArgs e)
         {
             AD9958 selectedDDS = ddsList[deviceListBox.SelectedIndex];
-            selectedDDS.DebugListplayMode();
+            List<double> frequencies = new List<double>();
+            double startfreq = 10e6;
+            selectedDDS.MasterReset();
+            selectedDDS.SetFrequency(0, startfreq);            
+            selectedDDS.SelectChannelToWrite(0);
+
+            for (int k = 0; k < 2049; k++)
+			{
+			  frequencies.Add(startfreq + k*10000);
+			}
+            selectedDDS.SetFrequencyList(frequencies.ToArray());
+        
         }
     }
 }

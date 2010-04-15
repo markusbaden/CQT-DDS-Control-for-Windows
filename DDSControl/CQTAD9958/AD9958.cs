@@ -124,6 +124,7 @@ namespace DDSControl
         /// is transferred into the DDS upon receiving a transition from logical low to high on P3, followed by an IOUpdate.
         /// Once the end of the list in the RAM is reached the buffer wraps around. To reset the list back to the first segment
         /// one can issue a logical high to P2.
+        /// </remarks>
         internal void ListplayMode(int SegmentLength)
         {
             if (log.IsInfoEnabled) { log.InfoFormat("Configuring listplay mode with segment length {0}", SegmentLength); }
