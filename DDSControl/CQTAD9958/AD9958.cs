@@ -86,10 +86,11 @@ namespace DDSControl
             get { return writePatternCSR; }
         }
 
+        /// Naming in the following region is consistent with the firmware naming of Christian
         #region EP1OUT Commands
 
         /// <summary>
-        /// Issue a Full_DDS_Reset. Avoid to use directly, use MasterReset instead.
+        /// Issue a Full_DDS_Reset.
         /// </summary>
         /// <remarks>
         /// This is an command defined on the firmware of the EZ USB FX2. It toggles the master reset bit of the DDS chip,
@@ -97,11 +98,25 @@ namespace DDSControl
         /// which enables EP2 transfers and switches on the IOUPDATE mode. However it does not set the CSR, CFR and FR1 to 
         /// the right configuration, so use MasterReset instead.
         /// </remarks>
-        public void Full_DDS_Reset()
+        internal void Full_DDS_Reset()
         {
-            log.Info("Performing FullDDSReset");
+            log.Info("Sending Full_DDS_Reset command");
             Message fullResetMessage = new Message(new byte[] {0x03,0x08,0x0b});
             sendToEP1(fullResetMessage);
+        }
+
+        /// <summary>
+        /// Enable transfer via EP2OUT
+        /// </summary>
+        /// <remarks>
+        /// This is a command defined in the firmware of the EZ USB chip. It enables data transfer via EP2OUT (which triggers
+        /// the GPIF engine).
+        /// </remarks>
+        internal void Start_Transfer()
+        {
+            if (log.IsInfoEnabled) { log.Info("Sending Start_Transfer command"); }
+            Message msg = new Message(new byte[] { 0x03, 0x03, 0x06 });
+            sendToEP1(msg);
         }
 
         #endregion

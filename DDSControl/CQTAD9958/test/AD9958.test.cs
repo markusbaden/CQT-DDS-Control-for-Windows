@@ -18,7 +18,8 @@ namespace DDSControl
         private Message setSingleTone;
         private Message selectBothChannels;
         private Message fullDDSReset;
-        
+        private Message startTransfer;
+        private Message stopTransfer;
         
         [SetUp]
         public void Initialize()
@@ -44,10 +45,14 @@ namespace DDSControl
             // write mode MSB serial 4 bit mode
             selectBothChannels = new Message(new byte[] { 0x00, (byte)(0xc0 + 0x36) });
 
-            // FullDDSReset via EP1
+            // Full_DDS_Reset via EP1
             fullDDSReset = new Message(new byte[] { 0x03, 0x08, 0x0b });
-            
 
+            // Start_Transfer via EP1
+            startTransfer = new Message(0x03, 0x03, 0x06);
+        
+            // Stop Transfer via EP1
+            stopTransfer = new Message(0x04, 0x03, 0x07);
         }
 
         [Test]
@@ -60,6 +65,19 @@ namespace DDSControl
             Expect.Once.On(mockDevice).Method("SendDataToEP1").With(call.ToArray());
 
             dds.Full_DDS_Reset();
+
+            mocks.VerifyAllExpectationsHaveBeenMet();
+        }
+
+        [Test]
+        public void TestStartTransfer()
+        {
+            Message call = new Message();
+            call.Add(startTransfer);
+            
+            Expect.Once.On(mockDevice).Method("SendDataToEP1").With(call.ToArray());
+
+            dds.Start_Transfer();
 
             mocks.VerifyAllExpectationsHaveBeenMet();
         }

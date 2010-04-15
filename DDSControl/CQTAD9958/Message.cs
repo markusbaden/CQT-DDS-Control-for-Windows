@@ -16,9 +16,9 @@ namespace DDSControl
             this.Add(Content);
         }
         
-        public Message(byte[] Content)
+        public Message(params byte[] Content)
         {
-            this.Add(Content);
+            this.AddRange(Content);
         }
 
         public void Add(byte[] Array)
