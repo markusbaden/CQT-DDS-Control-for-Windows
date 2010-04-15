@@ -118,7 +118,7 @@ namespace DDSControl
         private void button2_Click(object sender, EventArgs e)
         {
             AD9958 selectedDDS = ddsList[deviceListBox.SelectedIndex];
-            selectedDDS.GetReferenceAmplitudes();
+            selectedDDS.DebugListplayMode();
         }
     }
 }

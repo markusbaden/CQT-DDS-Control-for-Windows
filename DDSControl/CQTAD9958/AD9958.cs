@@ -181,6 +181,10 @@ namespace DDSControl
             sendToEP1(msg);
         }
 
+        /// <summary>
+        /// Set both channels to 10 MHz and jump relative phase in steps of 45 deg. Only for debugging.
+        /// May change and disappear at any instant.
+        /// </summary>
         public void DebugListplayMode()
         {
             MasterReset();
