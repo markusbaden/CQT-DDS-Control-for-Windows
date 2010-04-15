@@ -62,7 +62,7 @@ namespace DDSControl
             foreach (USBDevice dev in deviceList)
             {
                 deviceListBox.Items.Add(String.Format("{0} / {1}", dev.Product, dev.SerialNumber));
-                ddsList.Add(new AD9958(new DDSMicrocontroller(dev as CyUSBDevice)));
+                ddsList.Add(new AD9958(new DDSUSBChip(dev as CyUSBDevice)));
             }
         }
 
