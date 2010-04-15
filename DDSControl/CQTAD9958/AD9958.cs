@@ -119,6 +119,12 @@ namespace DDSControl
             sendToEP1(msg);
         }
 
+        internal void Stop_Transfer()
+        {
+            if (log.IsInfoEnabled) { log.Info("Sending Stop_Transfer command"); }
+            Message msg = new Message(new byte[] { 0x03, 0x04, 0x07 });
+            sendToEP1(msg);
+        }
         #endregion
 
         /// <summary>

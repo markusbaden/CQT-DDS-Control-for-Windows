@@ -52,7 +52,7 @@ namespace DDSControl
             startTransfer = new Message(0x03, 0x03, 0x06);
         
             // Stop Transfer via EP1
-            stopTransfer = new Message(0x04, 0x03, 0x07);
+            stopTransfer = new Message(0x03, 0x04, 0x07);
         }
 
         [Test]
@@ -74,11 +74,18 @@ namespace DDSControl
         {
             Message call = new Message();
             call.Add(startTransfer);
-            
             Expect.Once.On(mockDevice).Method("SendDataToEP1").With(call.ToArray());
-
             dds.Start_Transfer();
+            mocks.VerifyAllExpectationsHaveBeenMet();
+        }
 
+        [Test]
+        public void TestStopTransfer()
+        {
+            Message call = new Message();
+            call.Add(stopTransfer);
+            Expect.Once.On(mockDevice).Method("SendDataToEP1").With(call.ToArray());
+            dds.Stop_Transfer();
             mocks.VerifyAllExpectationsHaveBeenMet();
         }
 
