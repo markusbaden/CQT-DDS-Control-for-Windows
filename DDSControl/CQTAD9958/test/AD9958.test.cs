@@ -12,7 +12,7 @@ namespace DDSControl
     {
         private AD9958 dds;
         private Mockery mocks;
-        private IDDSMicrocontroller mockDevice;
+        private IDDSUSBChip mockDevice;
 
         private Message setTwoLevel;
         private Message setSingleTone;
@@ -24,7 +24,7 @@ namespace DDSControl
         public void Initialize()
         {
             mocks = new Mockery();
-            mockDevice = mocks.NewMock<IDDSMicrocontroller>();
+            mockDevice = mocks.NewMock<IDDSUSBChip>();
             dds = new AD9958(mockDevice);
 
             // Define some common calls
@@ -126,7 +126,7 @@ namespace DDSControl
     {
         private AD9958 dds;
         private Mockery mocks;
-        private IDDSMicrocontroller mockDevice;
+        private IDDSUSBChip mockDevice;
 
         private Message fullDDSReset;
         private Message setTwoLevel;
@@ -142,7 +142,7 @@ namespace DDSControl
         public void Initialize()
         {
             mocks = new Mockery();
-            mockDevice = mocks.NewMock<IDDSMicrocontroller>();
+            mockDevice = mocks.NewMock<IDDSUSBChip>();
             dds = new AD9958(mockDevice);
 
             // Define some messages
@@ -273,13 +273,13 @@ namespace DDSControl
     {
         private AD9958 dds;
         private Mockery mocks;
-        private IDDSMicrocontroller mockMicrocontroller;
+        private IDDSUSBChip mockMicrocontroller;
 
         [SetUp]
         public void Initialize()
         {
             mocks = new Mockery();
-            mockMicrocontroller = mocks.NewMock<IDDSMicrocontroller>();
+            mockMicrocontroller = mocks.NewMock<IDDSUSBChip>();
             dds = new AD9958(mockMicrocontroller);
         }
 
@@ -341,7 +341,7 @@ namespace DDSControl
     {
         private AD9958 dds;
         private Mockery mocks;
-        private IDDSMicrocontroller mockMicrocontroller;
+        private IDDSUSBChip mockMicrocontroller;
         
         private Message selectChannelZero;
         private Message setTwoLevel;
@@ -356,7 +356,7 @@ namespace DDSControl
         public void Initialize()
         {
             mocks = new Mockery();
-            mockMicrocontroller = mocks.NewMock<IDDSMicrocontroller>();
+            mockMicrocontroller = mocks.NewMock<IDDSUSBChip>();
             dds = new AD9958(mockMicrocontroller);
 
             // Define some messages

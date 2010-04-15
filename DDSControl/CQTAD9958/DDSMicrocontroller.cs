@@ -10,7 +10,7 @@ namespace DDSControl
     /// Implements the ICQTUSBDevice interface and is thus a representation
     /// of the USB DDS that can be mocked.
     /// </summary>
-    public class DDSMicrocontroller : IDDSMicrocontroller
+    public class DDSMicrocontroller : IDDSUSBChip
     {
         private CyUSBDevice cyUSBDevice;
         private CyUSBEndPoint EP1OUT;

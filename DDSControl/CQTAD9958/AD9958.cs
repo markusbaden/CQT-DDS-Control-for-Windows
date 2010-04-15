@@ -534,7 +534,7 @@ namespace DDSControl
         /// one tries to use it in that way, so use the other constructors which hardwire functionality
         /// of CyUSB
         /// </remarks>
-        public AD9958(IDDSMicrocontroller usbDevice)
+        public AD9958(IDDSUSBChip usbDevice)
         {
             // device is protected member of the base class
             device = usbDevice;

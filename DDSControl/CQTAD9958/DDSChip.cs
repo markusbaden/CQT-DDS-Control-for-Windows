@@ -23,7 +23,7 @@ namespace DDSControl
             get;
         }
 
-        protected IDDSMicrocontroller device;
+        protected IDDSUSBChip device;
         protected Dictionary<string, DDSRegister> registerByShortName;
     
     }
