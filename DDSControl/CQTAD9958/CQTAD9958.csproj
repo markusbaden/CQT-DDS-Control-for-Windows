@@ -81,7 +81,6 @@
     <Compile Include="Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="test\AD9958.test.cs" />
-    <Compile Include="test\DDSUSBChip.test.cs" />
     <Compile Include="test\DDSUtils.test.cs" />
     <Compile Include="test\Message.test.cs" />
   </ItemGroup>
