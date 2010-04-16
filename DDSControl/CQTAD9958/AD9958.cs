@@ -314,7 +314,7 @@ namespace DDSControl
         public void SetLinearSweep(int Channel, double StartFrequency, double StopFrequency, double RampRate, double DeltaFrequency)
         {
             Message msg = new Message();
-            msg.Add(messageFactory.SelectChannelMessage(0));
+            msg.Add(messageFactory.SelectChannelMessage(Channel));
             msg.Add(messageFactory.SetLevelMessage(2));
             msg.Add(messageFactory.SetModeMessage("fm", true, false));
             msg.Add(messageFactory.SetFrequencyMessage(StartFrequency));
