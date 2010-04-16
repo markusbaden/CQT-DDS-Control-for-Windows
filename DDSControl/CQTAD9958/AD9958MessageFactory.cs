@@ -12,8 +12,13 @@ namespace DDSControl
         #endregion //log4net
 
         private double clockFrequency = 500e6;
+        private double syncFrequency 
+        {
+            get { return clockFrequency / 4; }
+        }
         private double frequencyStep;
         private double phaseStep;
+        private double rampStep;
         private Dictionary<string, DDSRegister> registerByShortName;
 
 
@@ -210,6 +215,44 @@ namespace DDSControl
             return msg;
         }
 
+        public Message SetRampRate(double RampRate)
+        {
+            return SetRampRate(RampRate, RampRate);
+        }
+
+        public Message SetRampRate(double RisingRampRate, double FallingRampRate)
+        {
+            Message msg = new Message();
+            msg.Add(registerByShortName["LSRR"].Address);
+            msg.Add(calculateRampRateWord(RisingRampRate));
+            msg.Add(calculateRampRateWord(FallingRampRate));
+            return msg;
+        }
+
+        public Message SetDeltaFrequency(double DeltaFrequency)
+        {
+            Message msg = new Message();
+            msg.Add(SetRisingDeltaFrequency(DeltaFrequency));
+            msg.Add(SetFallingDeltaFrequency(DeltaFrequency));
+            return msg;
+        }
+
+        public Message SetRisingDeltaFrequency(double RisingDeltaFrequency)
+        {
+            Message msg = new Message();
+            msg.Add(registerByShortName["RDW"].Address);
+            msg.Add(FrequencyMessage(RisingDeltaFrequency));
+            return msg;
+        }
+
+        public Message SetFallingDeltaFrequency(double FallingDeltaFrequency)
+        {
+            Message msg = new Message();
+            msg.Add(registerByShortName["FDW"].Address);
+            msg.Add(FrequencyMessage(FallingDeltaFrequency));
+            return msg;
+        }
+
         #endregion
 
 
@@ -217,7 +260,7 @@ namespace DDSControl
 
         private int calculateFrequencyTuningWord(double frequency)
         {
-            return (int)(frequency * frequencyStep);
+            return (int)(Math.Round(frequency * frequencyStep));
         }
 
         private byte[] calculateFrequencyTuningWordAsBytes(double frequency)
@@ -228,7 +271,7 @@ namespace DDSControl
 
         private int calculatePhaseOffsetWord(double phase)
         {
-            return (int)(phase * phaseStep);
+            return (int)(Math.Round(phase * phaseStep));
         }
 
         private double calculateModuloPhase(double Phase)
@@ -237,6 +280,13 @@ namespace DDSControl
             if (moduloPhase < 0)
                 moduloPhase = moduloPhase + 360;
             return moduloPhase;
+        }
+
+        private byte[] calculateRampRateWord(double RampRate)
+        {
+            int word = (int) (Math.Round(RampRate * rampStep));
+            // Int has 4 bytes, but Ramp Rate word only 1
+            return DDSUtils.IntToMSByteArray(word,1).ToArray();
         }
 
         #endregion
@@ -301,8 +351,7 @@ namespace DDSControl
             defineChannelPattern();
             defineAmpFreqPhasePattern();
             defineLevelPattern();
-            defineFrequencyConstants();
-            definePhaseConstants();
+            defineConstants();
         }
 
         #endregion
@@ -344,6 +393,15 @@ namespace DDSControl
 
             // Amplitude Control Regist (ACR)
             addRegister("ACR", 0x06, new byte[] { 0x00, 0x00, 0x00 });
+
+            // Linear Sweep Ramp Rate
+            addRegister("LSRR", 0x07, new byte[] { 0x00, 0x00 });
+
+            // Linear Sweep Ramp Rising Delta Word
+            addRegister("RDW", 0x08, new byte[] { 0x00, 0x00, 0x00, 0x00 });
+        
+            // Linear Sweep Ramp Falling Delta Word
+            addRegister("FDW", 0x09, new byte[] { 0x00, 0x00, 0x00, 0x00 });
         }
 
         private void addRegister(string Name, byte Address, byte[] DefaultValues)
@@ -375,19 +433,20 @@ namespace DDSControl
             levelPatternFR1.Add(2, 0x00);
         }
 
-        private void defineFrequencyConstants()
+        private void defineConstants()
         {
             // Fout = (FrequencyTuningWord * clockFrequency) / (2^32)
             // <=> FTW = Fout * frequencyStep
             // And use long for the calculation because int is int32 < 2^31
             frequencyStep = (((long)1 << 32) / clockFrequency);
-        }
 
-        private void definePhaseConstants()
-        {
             // PhaseOffset = (PhaseOffsetWord/(2^14)) * 360
             // <=> POW = PhaseOffset * phaseStep
             phaseStep = Math.Pow(2, 14) / 360;
+
+            // RampRate = (RSRR) * 1/sync_clock
+            // <=> RSRR = RampRate * rampStep
+            rampStep = syncFrequency;
         }
 
         #endregion

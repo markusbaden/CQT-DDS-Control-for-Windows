@@ -434,7 +434,7 @@ namespace DDSControl
 
             // Set frequency tuning word of current channel to 1 MHz
             // 0x00 0x83 0x12 0x6E / 2**32 = 0.002
-            setFreqTuningWord1MHz = new Message(new byte[] { 0x04, 0x00, 0x83, 0x12, 0x6E });
+            setFreqTuningWord1MHz = new Message(new byte[] { 0x04, 0x00, 0x83, 0x12, 0x6F });
 
             // Set Channel Word Register 1 to 2 MHz
             setChanWordOne2MHz = new Message(new byte[] { 0x0A, 0x01, 0x06, 0x24, 0xDD });
@@ -464,10 +464,7 @@ namespace DDSControl
             call.Add(setFreqTuningWord1MHz);
             call.Add(setChanWordOne2MHz);
 
-            using (mocks.Ordered)
-            {
-                Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(call.ToArray());
-            }
+            Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(call.ToArray());
             dds.SetModulation(0, 2, "fm", 1e6, 2e6);
 
             mocks.VerifyAllExpectationsHaveBeenMet();
@@ -510,15 +507,18 @@ namespace DDSControl
         private Message setFMLinearSweep = new Message(0x03, 0x80, 0x43, 0x00);
         
         // Call CFTW witch 1/500 * 2^32 = 82589936
-        private Message setStartfrequency1MHz = new Message(0x00, 0x83, 0x12, 0x70);
+        private Message setStartfrequency1MHz = new Message(0x04, 0x00, 0x83, 0x12, 0x6f);
         
         // Call CW1 with 2/500 * 2^32 = 17179872
-        private Message setEndFrequency2Mhz = new Message(0x0a, 0x01, 0x06, 0x24, 0xe0);
+        private Message setEndFrequency2Mhz = new Message(0x0a, 0x01, 0x06, 0x24, 0xdd);
         
-        // Call RDW with (1e3 / 125e6) * 2^32 = 34360
-        private Message setRDW1kHz = new Message(0x08, 0x00, 0x00, 0x86, 0x38);
+        // Call RDW with (1e3 / 500e6) * 2^32= 8590
+        private Message setRDW1kHz = new Message(0x08, 0x00, 0x00, 0x21, 0x8e);
         
-        // Call RSRR with both 1e-6*125e6 * 256 = 128
+        // Call FDW with (1e3 / 500e6) * 2^32 = 8590
+        private Message setFDW1kHz = new Message(0x09, 0x00, 0x00, 0x21, 0x8e);
+        
+        // Call RSRR with both 1.024e-6*125e6 * 256 = 128
         private Message setRSRR1us =new Message(0x07, 0x80, 0x80);
 
         [SetUp]
@@ -541,13 +541,12 @@ namespace DDSControl
             msg.Add(setFMLinearSweep);
             msg.Add(setStartfrequency1MHz);
             msg.Add(setEndFrequency2Mhz);
-            msg.Add(setRDW1kHz);
             msg.Add(setRSRR1us);
+            msg.Add(setRDW1kHz);
+            msg.Add(setFDW1kHz);
 
             Expect.Once.On(mockMicrocontroller).Method("SendDataToEP2").With(msg.ToArray());
-
-            dds.SetLinearSweep(0, 1e6, 2e6, 1e3, 1e-3);
-            
+            dds.SetLinearSweep(0, 1e6, 2e6, 1.024e-6, 1e3);
             mocks.VerifyAllExpectationsHaveBeenMet();
         }
     }
