@@ -31,6 +31,26 @@ namespace DDSControl
             this.AddRange(message);
         }
 
+        public bool Equals(Message msg)
+        {
+            bool ret = true;
+            if (msg.Count!=this.Count)
+            {
+                ret = false;
+            }
+            else
+            {
+                for (int k = 0; k < msg.Count; k++)
+                {
+                    if (msg[k] != this[k])
+                    {
+                        ret = false;
+                    }
+                }
+            }
+            return ret;
+        }
+
         public override string ToString()
         {
             StringBuilder returnString = new StringBuilder();

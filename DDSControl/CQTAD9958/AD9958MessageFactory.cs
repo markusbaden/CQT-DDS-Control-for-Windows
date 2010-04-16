@@ -120,11 +120,11 @@ namespace DDSControl
             }
             
             // If LinearSweepNoDwell is set we have set bit 7 of that byte to 1
-            // We first mask bits 6:0 by an bitwise and with 100 000 = 0x40
+            // We first mask bits 6:0 by an bitwise and with 111 1111 = 0x7F
             // and then prepend a 1 by an bitwise XOR with 1000 000 = 0x80
             if (LinearSweepNoDwell)
             {
-                byte2 = (byte)((byte2 & 0x40) ^ 0x80);
+                byte2 = (byte)((byte2 & 0x7f) ^ 0x80);
             }
 
             // 0x00 taken from Christian's implementation
