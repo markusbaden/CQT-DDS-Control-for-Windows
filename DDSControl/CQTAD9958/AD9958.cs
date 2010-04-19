@@ -370,11 +370,11 @@ namespace DDSControl
         /// <param name="message">Message to be sent without checksum byte</param>
         private void sendToEP1(Message message)
         {
-            if (log.IsDebugEnabled) { log.DebugFormat("Recieved message to send to EP1{0}", message.ToString()); }
+            if (log.IsDebugEnabled) { log.DebugFormat("Recieved message to send to EP1: {0}", message.ToString()); }
 
             byte checksum = DDSUtils.Checksum(message);
 
-            if (log.IsDebugEnabled) { log.DebugFormat("Appending checksum byte {0} to message", checksum); }
+            if (log.IsDebugEnabled) { log.DebugFormat("Appending checksum byte 0x{0} to message", checksum); }
 
             message.Add(checksum);
             
