@@ -342,6 +342,25 @@ namespace DDSControl
             sendToEP2(msg);
         }
 
+        public void SetDeltaFrequencyList(params double[] DeltaFrequency)
+        {
+            Stop_Transfer();
+            
+            Message msg = new Message();
+            msg.Add(messageFactory.SetDeltaFrequency(DeltaFrequency[0]));
+
+            int segmentLength = msg.Count;
+
+            for (int k = 1; k < DeltaFrequency.Length; k++)
+            {
+                msg.Add(messageFactory.SetDeltaFrequency(DeltaFrequency[k]));
+            }
+
+            ListplayMode(segmentLength);
+            StartListplayMode();
+            sendToEP2(msg);
+        }
+
         #region Functions for sending and receiving messages
 
         /// <summary>
