@@ -304,7 +304,7 @@ namespace DDSControl
             if (log.IsInfoEnabled) { log.Info(channelWords.ToString()); }
 
             Message msg = new Message();
-            msg.Add(messageFactory.SelectChannelMessage(0));
+            msg.Add(messageFactory.SelectChannelMessage(Channel));
             msg.Add(messageFactory.SetLevelMessage(Levels));
             msg.Add(messageFactory.SetModeMessage(ModulationType));
             msg.Add(messageFactory.FillChannelWords(ModulationType, ChannelWordList));
