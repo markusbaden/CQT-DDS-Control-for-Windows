@@ -20,7 +20,7 @@ namespace DDSControl
         public void TestSetModeMessageFM()
         {
             Message msg = new Message(0x03, 0x80, 0x03, 0x00);
-            Assert.IsTrue(msg.Equals(factory.SetModeMessage("fm")));
+            Assert.IsTrue(msg.Equals(factory.SetMode("fm")));
         }
 
 
@@ -28,14 +28,14 @@ namespace DDSControl
         public void TestSetModeMessageFMLinearSweep()
         {
             Message msg = new Message(0x03, 0x80, 0x43, 0x00);
-            Assert.IsTrue(msg.Equals(factory.SetModeMessage("fm",true, false)));
+            Assert.IsTrue(msg.Equals(factory.SetMode("fm",true, false)));
         }
 
         [Test]
         public void TestSetModeMessageFMLinearSweepNoDwell()
         {
             Message msg = new Message(0x03, 0x80, 0xC3, 0x00);
-            Assert.IsTrue(msg.Equals(factory.SetModeMessage("fm", true, true)));
+            Assert.IsTrue(msg.Equals(factory.SetMode("fm", true, true)));
         }
         
     }

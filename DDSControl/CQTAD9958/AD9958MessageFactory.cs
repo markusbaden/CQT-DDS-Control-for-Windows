@@ -24,7 +24,7 @@ namespace DDSControl
 
         #region Functions to generate messages
 
-        public Message SelectChannelMessage(int ChannelNumber)
+        public Message SelectChannel(int ChannelNumber)
         {
             Message msg = new Message();
             msg.Add(registerByShortName["CSR"].Address);
@@ -33,7 +33,7 @@ namespace DDSControl
             return msg;
         }
 
-        public Message SetChannelWordMessage(int ChannelRegisterNumber, byte[] Content)
+        public Message SetChannelWord(int ChannelRegisterNumber, byte[] Content)
         {
             Message msg = new Message();
             byte addressByte = (byte)(0x0A + (ChannelRegisterNumber - 1));
@@ -45,7 +45,7 @@ namespace DDSControl
             return msg;
         }
 
-        public Message SetAmplitudeMessage(int AmplitudeScaleFactor)
+        public Message SetAmplitude(int AmplitudeScaleFactor)
         {
             Message msg = new Message();
             msg.Add(registerByShortName["ACR"].Address);
@@ -63,7 +63,7 @@ namespace DDSControl
             return msg;
         }
 
-        public Message SetFrequencyMessage(double Frequency)
+        public Message SetFrequency(double Frequency)
         {
             Message msg = new Message();
             msg.Add(registerByShortName["CFTW"].Address);
@@ -80,7 +80,7 @@ namespace DDSControl
             return msg;
         }
 
-        public Message SetLevelMessage(int Levels)
+        public Message SetLevel(int Levels)
         {
             Message msg = new Message();
             msg.Add(registerByShortName["FR1"].Address);
@@ -95,12 +95,12 @@ namespace DDSControl
             return msg;
         }
 
-        public Message SetModeMessage(string Mode)
+        public Message SetMode(string Mode)
         {
-            return SetModeMessage(Mode, false, false);
+            return SetMode(Mode, false, false);
         }
 
-        public Message SetModeMessage(string Mode, bool LinearSweepEnable, bool LinearSweepNoDwell)
+        public Message SetMode(string Mode, bool LinearSweepEnable, bool LinearSweepNoDwell)
         {
             Message msg = new Message();
             msg.Add(registerByShortName["CFR"].Address);
@@ -146,12 +146,12 @@ namespace DDSControl
             switch (ModulationType)
             {
                 case "fm":
-                    msg.Add(SetFrequencyMessage(ChannelWordList[0]));
-                    msg.Add(SetChannelWordMessage(1, FrequencyMessage(ChannelWordList[1]).ToArray()));
+                    msg.Add(SetFrequency(ChannelWordList[0]));
+                    msg.Add(SetChannelWord(1, FrequencyMessage(ChannelWordList[1]).ToArray()));
                     break;
                 case "pm":
-                    msg.Add(SetPhaseMessage(ChannelWordList[0]));
-                    msg.Add(SetChannelWordMessage(1, PhaseAsChannelWordMessage(ChannelWordList[1]).ToArray()));
+                    msg.Add(SetPhase(ChannelWordList[0]));
+                    msg.Add(SetChannelWord(1, PhaseAsChannelWord(ChannelWordList[1]).ToArray()));
                     break;
                 default:
                     if (log.IsErrorEnabled) { log.ErrorFormat("Could not recognize the modulatioin type {0} while trying to fill in channel words", ModulationType); }
@@ -160,7 +160,7 @@ namespace DDSControl
             return msg;
         }
 
-        public Message SetPhaseMessage(double Phase)
+        public Message SetPhase(double Phase)
         {
 
             double moduloPhase = calculateModuloPhase(Phase);
@@ -192,7 +192,7 @@ namespace DDSControl
             return msg;
         }
 
-        public Message PhaseAsChannelWordMessage(double Phase)
+        public Message PhaseAsChannelWord(double Phase)
         {
             // The Channel Word Register are 4byte long and the PhaseOffsetWord only 14bit long
             // the PhaseOffsetWord has to be MSB aligned in the register

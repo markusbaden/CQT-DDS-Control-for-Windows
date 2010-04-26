@@ -164,9 +164,9 @@ namespace DDSControl
             log.Info("Initializing DDS as part of master reset.");
             
             Message initialization = new Message();
-            initialization.Add(messageFactory.SelectChannelMessage(2));
-            initialization.Add(messageFactory.SetModeMessage("singletone"));
-            initialization.Add(messageFactory.SetLevelMessage(2));
+            initialization.Add(messageFactory.SelectChannel(2));
+            initialization.Add(messageFactory.SetMode("singletone"));
+            initialization.Add(messageFactory.SetLevel(2));
 
             sendToEP2(initialization);
         }
@@ -178,7 +178,7 @@ namespace DDSControl
         public void SelectChannelToWrite(int ChannelNumber)
         {
             log.InfoFormat("Selecting channel {0} to write to", ChannelNumber);
-            sendToEP2(messageFactory.SelectChannelMessage(ChannelNumber));
+            sendToEP2(messageFactory.SelectChannel(ChannelNumber));
         }
 
         /// <summary>
@@ -190,8 +190,8 @@ namespace DDSControl
         {
             log.InfoFormat("Selecting mode {0}", Mode);
             Message msg = new Message();
-            msg.Add(messageFactory.SelectChannelMessage(2));
-            msg.Add(messageFactory.SetModeMessage(Mode));
+            msg.Add(messageFactory.SelectChannel(2));
+            msg.Add(messageFactory.SetMode(Mode));
             sendToEP2(msg);
         }
 
@@ -203,7 +203,7 @@ namespace DDSControl
         public void SetLevels(int Levels)
         {
             log.InfoFormat("Setting levels to {0}", Levels);
-            sendToEP2(messageFactory.SetLevelMessage(Levels));
+            sendToEP2(messageFactory.SetLevel(Levels));
         }
 
 
@@ -216,8 +216,8 @@ namespace DDSControl
         {
             log.InfoFormat("Setting frequency of channel {0} to {1:0.000e0} Hz", ChannelNumber, Frequency);
             Message msg = new Message();
-            msg.Add(messageFactory.SelectChannelMessage(ChannelNumber));
-            msg.Add(messageFactory.SetFrequencyMessage(Frequency));
+            msg.Add(messageFactory.SelectChannel(ChannelNumber));
+            msg.Add(messageFactory.SetFrequency(Frequency));
             sendToEP2(msg);
         }
 
@@ -233,7 +233,7 @@ namespace DDSControl
         public void SetFrequency(double Frequency)
         {
             log.InfoFormat("Setting frequency of current channel to {0:0.000e0}", Frequency);
-            sendToEP2(messageFactory.SetFrequencyMessage(Frequency));
+            sendToEP2(messageFactory.SetFrequency(Frequency));
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace DDSControl
         public void SetAmplitude(int AmplitudeScaleFactor)
         {
             log.InfoFormat("Setting amplitude scale factor for current channel to {0}", AmplitudeScaleFactor);
-            sendToEP2(messageFactory.SetAmplitudeMessage(AmplitudeScaleFactor));
+            sendToEP2(messageFactory.SetAmplitude(AmplitudeScaleFactor));
         }
 
 
@@ -269,15 +269,15 @@ namespace DDSControl
             if (log.IsInfoEnabled) { log.InfoFormat("I am assuming a phase shift on the board of {0} (sent = set - {0})", phaseShiftOnBoard); }
 
             Message msg = new Message();
-            msg.Add(messageFactory.SetLevelMessage(2));
-            msg.Add(messageFactory.SelectChannelMessage(2));
-            msg.Add(messageFactory.SetModeMessage("singletone"));
-            msg.Add(messageFactory.SelectChannelMessage(0));
-            msg.Add(messageFactory.SetFrequencyMessage(Frequency));
-            msg.Add(messageFactory.SetPhaseMessage(0));
-            msg.Add(messageFactory.SelectChannelMessage(1));
-            msg.Add(messageFactory.SetFrequencyMessage(Frequency));
-            msg.Add(messageFactory.SetPhaseMessage(RelativePhase - phaseShiftOnBoard));
+            msg.Add(messageFactory.SetLevel(2));
+            msg.Add(messageFactory.SelectChannel(2));
+            msg.Add(messageFactory.SetMode("singletone"));
+            msg.Add(messageFactory.SelectChannel(0));
+            msg.Add(messageFactory.SetFrequency(Frequency));
+            msg.Add(messageFactory.SetPhase(0));
+            msg.Add(messageFactory.SelectChannel(1));
+            msg.Add(messageFactory.SetFrequency(Frequency));
+            msg.Add(messageFactory.SetPhase(RelativePhase - phaseShiftOnBoard));
 
             sendToEP2(msg);
         }
@@ -304,9 +304,9 @@ namespace DDSControl
             if (log.IsInfoEnabled) { log.Info(channelWords.ToString()); }
 
             Message msg = new Message();
-            msg.Add(messageFactory.SelectChannelMessage(Channel));
-            msg.Add(messageFactory.SetLevelMessage(Levels));
-            msg.Add(messageFactory.SetModeMessage(ModulationType));
+            msg.Add(messageFactory.SelectChannel(Channel));
+            msg.Add(messageFactory.SetLevel(Levels));
+            msg.Add(messageFactory.SetMode(ModulationType));
             msg.Add(messageFactory.FillChannelWords(ModulationType, ChannelWordList));
             sendToEP2(msg);
         }
@@ -314,11 +314,11 @@ namespace DDSControl
         public void SetLinearSweep(int Channel, double StartFrequency, double StopFrequency, double DeltaTime, double DeltaFrequency)
         {
             Message msg = new Message();
-            msg.Add(messageFactory.SelectChannelMessage(Channel));
-            msg.Add(messageFactory.SetLevelMessage(2));
-            msg.Add(messageFactory.SetModeMessage("fm", true, false));
-            msg.Add(messageFactory.SetFrequencyMessage(StartFrequency));
-            msg.Add(messageFactory.SetChannelWordMessage(1,messageFactory.FrequencyMessage(StopFrequency).ToArray()));
+            msg.Add(messageFactory.SelectChannel(Channel));
+            msg.Add(messageFactory.SetLevel(2));
+            msg.Add(messageFactory.SetMode("fm", true, false));
+            msg.Add(messageFactory.SetFrequency(StartFrequency));
+            msg.Add(messageFactory.SetChannelWord(1,messageFactory.FrequencyMessage(StopFrequency).ToArray()));
             msg.Add(messageFactory.SetRampRate(DeltaTime));
             msg.Add(messageFactory.SetDeltaFrequency(DeltaFrequency));
             sendToEP2(msg);
@@ -328,7 +328,7 @@ namespace DDSControl
         {
             double maxDeltaTime = 2.048e-6;
             Message msg = new Message();
-            msg.Add(messageFactory.SelectChannelMessage(0));
+            msg.Add(messageFactory.SelectChannel(0));
             msg.Add(messageFactory.SetRampRate(maxDeltaTime));
         }
 
@@ -337,12 +337,12 @@ namespace DDSControl
             Stop_Transfer();
 
             Message msg = new Message();
-            msg.Add(messageFactory.SetFrequencyMessage(Frequency[0]));
+            msg.Add(messageFactory.SetFrequency(Frequency[0]));
             int segmentLength = msg.Count;
 
             for (int k = 1; k < Frequency.Length; k++)
             {
-                msg.Add(messageFactory.SetFrequencyMessage(Frequency[k]));
+                msg.Add(messageFactory.SetFrequency(Frequency[k]));
             }
 
             ListplayMode(segmentLength);
