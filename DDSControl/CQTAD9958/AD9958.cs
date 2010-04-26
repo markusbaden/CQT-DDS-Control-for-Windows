@@ -324,6 +324,14 @@ namespace DDSControl
             sendToEP2(msg);
         }
 
+        public void SetDifferentialSweepSlope(double Slope)
+        {
+            double maxDeltaTime = 2.048e-6;
+            Message msg = new Message();
+            msg.Add(messageFactory.SelectChannelMessage(0));
+            msg.Add(messageFactory.SetRampRate(maxDeltaTime));
+        }
+
         public void SetFrequencyList(params double[] Frequency)
         {
             Stop_Transfer();
