@@ -226,6 +226,7 @@ namespace DDSControl
             msg.Add(registerByShortName["LSRR"].Address);
             msg.Add(calculateRampRateWord(RisingRampRate));
             msg.Add(calculateRampRateWord(FallingRampRate));
+            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set rising ramp rate to {0} and falling ramp rate to {1}: {2}", RisingRampRate,FallingRampRate,msg); }
             return msg;
         }
 
@@ -242,6 +243,7 @@ namespace DDSControl
             Message msg = new Message();
             msg.Add(registerByShortName["RDW"].Address);
             msg.Add(FrequencyMessage(RisingDeltaFrequency));
+            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set rising delta frequency to {0}: {1}", RisingDeltaFrequency, msg); }
             return msg;
         }
 
@@ -250,6 +252,7 @@ namespace DDSControl
             Message msg = new Message();
             msg.Add(registerByShortName["FDW"].Address);
             msg.Add(FrequencyMessage(FallingDeltaFrequency));
+            if (log.IsDebugEnabled) { log.DebugFormat("Generated message to set falling delta frequency to {0}: {1}", FallingDeltaFrequency, msg); }
             return msg;
         }
 
