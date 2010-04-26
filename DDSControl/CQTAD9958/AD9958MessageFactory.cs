@@ -287,7 +287,10 @@ namespace DDSControl
 
         private byte[] calculateRampRateWord(double RampRate)
         {
-            int word = (int) (Math.Round(RampRate * rampStep));
+            // Calculate the the 8bit word. since it is assumed
+            // to be nonzero a 0 is a one (and a 255 a 256)
+            // that's why we substract one from the result. Cheers
+            int word = (int) (Math.Round(RampRate * rampStep)) - 1;
             // Int has 4 bytes, but Ramp Rate word only 1
             return DDSUtils.IntToMSByteArray(word,1).ToArray();
         }
