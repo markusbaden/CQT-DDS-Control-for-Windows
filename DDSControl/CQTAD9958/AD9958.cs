@@ -331,18 +331,18 @@ namespace DDSControl
             double minDeltaFrequency = 0.1;
             double minSlope = minDeltaFrequency / maxDeltaTime;
 
-            // Slope of channel 1 is slope of channel 0 plus the differential Slope
-            // where we keep the maximum time step (why? sounds like smart choice for slow sweeps but dunno)
-            // S1 = f/t_max = S0 + dS or f=(dF +S0) * t_max
-            double deltaFrequency = (DifferentialSlope + minSlope) * maxDeltaTime;
+            // Slope of channel 1 is S1=S0 + S
+            // fixing f2=fmin we get (fixing t2=tmax is bad since it leads to S1_min = fmin/tmax)
+            // t2 = t_max / (1+S/Smin) = t_max / (1+S*tmax/fmin)
+            double deltaTime = maxDeltaTime / (1 + DifferentialSlope * maxDeltaTime / minDeltaFrequency);
             
             Message msg = new Message();
             msg.Add(messageFactory.SelectChannel(0));
             msg.Add(messageFactory.SetRampRate(maxDeltaTime));
             msg.Add(messageFactory.SetDeltaFrequency(minDeltaFrequency));
             msg.Add(messageFactory.SelectChannel(1));
-            msg.Add(messageFactory.SetRampRate(maxDeltaTime));
-            msg.Add(messageFactory.SetDeltaFrequency(deltaFrequency));
+            msg.Add(messageFactory.SetRampRate(deltaTime));
+            msg.Add(messageFactory.SetDeltaFrequency(minDeltaFrequency));
 
             sendToEP2(msg);            
         }
