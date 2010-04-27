@@ -282,6 +282,8 @@ namespace DDSControl
             sendToEP2(msg);
         }
 
+        #region Modulation Mode Commands
+
         /// <summary>
         /// Set DDS to modulation mode via the 4 bit register.
         /// </summary>
@@ -293,7 +295,7 @@ namespace DDSControl
         {
             if (log.IsInfoEnabled)
             {
-                log.InfoFormat("Setting {0} level modulation mode \"{1}\" for channel {2}",Levels, ModulationType, Channel);
+                log.InfoFormat("Setting {0} level modulation mode \"{1}\" for channel {2}", Levels, ModulationType, Channel);
             }
             StringBuilder channelWords = new StringBuilder();
             channelWords.Append("The channel words are: ");
@@ -310,7 +312,20 @@ namespace DDSControl
             msg.Add(messageFactory.FillChannelWords(ModulationType, ChannelWordList));
             sendToEP2(msg);
         }
+ 
+        #endregion
 
+        #region Linear Sweep Mode Commands
+
+        /// <summary>
+        /// Set DDS to perform linear frequency sweep. The registers for the rising and falling sweep will
+        /// be connfigured with the same parameters.
+        /// </summary>
+        /// <param name="Channel">Which channel, 0/1 or 2 for both</param>
+        /// <param name="StartFrequency">Start frequency</param>
+        /// <param name="StopFrequency">Stop frequency</param>
+        /// <param name="DeltaTime">Time between increments resp. decrements. Corresponds to ramp rate in the data sheet.</param>
+        /// <param name="DeltaFrequency">Frequency increment resp. decrement. Corresponds to delta word in the data sheet.</param>
         public void SetLinearSweep(int Channel, double StartFrequency, double StopFrequency, double DeltaTime, double DeltaFrequency)
         {
             Message msg = new Message();
@@ -318,13 +333,19 @@ namespace DDSControl
             msg.Add(messageFactory.SetLevel(2));
             msg.Add(messageFactory.SetMode("fm", true, false));
             msg.Add(messageFactory.SetFrequency(StartFrequency));
-            msg.Add(messageFactory.SetChannelWord(1,messageFactory.FrequencyMessage(StopFrequency).ToArray()));
+            msg.Add(messageFactory.SetChannelWord(1, messageFactory.FrequencyMessage(StopFrequency).ToArray()));
             msg.Add(messageFactory.SetRampRate(DeltaTime));
             msg.Add(messageFactory.SetDeltaFrequency(DeltaFrequency));
             sendToEP2(msg);
         }
 
-        public void SetDifferentialSweepSlope(double DifferentialSlope)
+        /// <summary>
+        /// Set DDS to perform differential sweep. Channel 0 will perform a linear sweep at
+        /// the minimum sweep rate of Smin = 50kHz/s and channel 1 a sweep at Smin plus dS.
+        /// The result is a sweep of the difference in the to channels with rate dS.
+        /// </summary>
+        /// <param name="DifferentialSlope">Differential slope dS of the sweep of the difference of the two channels</param>
+        public void SetDifferentialSweep(double DifferentialSlope)
         {
             // Slope of channel 0 is minimum slope f_min/t_max
             double maxDeltaTime = 2.048e-6;
@@ -335,7 +356,7 @@ namespace DDSControl
             // fixing f2=fmin we get (fixing t2=tmax is bad since it leads to S1_min = fmin/tmax)
             // t2 = t_max / (1+S/Smin) = t_max / (1+S*tmax/fmin)
             double deltaTime = maxDeltaTime / (1 + DifferentialSlope * maxDeltaTime / minDeltaFrequency);
-            
+
             Message msg = new Message();
             msg.Add(messageFactory.SelectChannel(0));
             msg.Add(messageFactory.SetRampRate(maxDeltaTime));
@@ -344,8 +365,12 @@ namespace DDSControl
             msg.Add(messageFactory.SetRampRate(deltaTime));
             msg.Add(messageFactory.SetDeltaFrequency(minDeltaFrequency));
 
-            sendToEP2(msg);            
+            sendToEP2(msg);
         }
+        
+        #endregion
+
+        #region Listplay Mode Commands
 
         public void SetFrequencyList(params double[] Frequency)
         {
@@ -368,7 +393,7 @@ namespace DDSControl
         public void SetDeltaFrequencyList(params double[] DeltaFrequency)
         {
             Stop_Transfer();
-            
+
             Message msg = new Message();
             msg.Add(messageFactory.SetDeltaFrequency(DeltaFrequency[0]));
 
@@ -383,6 +408,8 @@ namespace DDSControl
             StartListplayMode();
             sendToEP2(msg);
         }
+        
+        #endregion
 
         #region Functions for sending and receiving messages
 
