@@ -348,8 +348,6 @@ namespace DDSControl
         public void SetDifferentialSweep(double DifferentialSlope)
         {
             // Slope of channel 0 is minimum slope f_min/t_max
-            double maxDeltaTime = 2.048e-6;
-            double minDeltaFrequency = 0.1;
             double minSlope = minDeltaFrequency / maxDeltaTime;
 
             // Slope of channel 1 is S1=S0 + S
@@ -367,6 +365,9 @@ namespace DDSControl
 
             sendToEP2(msg);
         }
+
+        private double maxDeltaTime = 2.048e-6;
+        private double minDeltaFrequency = 0.1;
         
         #endregion
 
@@ -411,6 +412,7 @@ namespace DDSControl
 
         public void SetDifferentialSweepList(List<double> RisingSlopes, List<double> FallingSlopes)
         {
+            Message msg = new Message();
         }
         
         #endregion
