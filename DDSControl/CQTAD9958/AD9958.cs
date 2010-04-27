@@ -374,7 +374,6 @@ namespace DDSControl
 
         public void SetFrequencyList(params double[] Frequency)
         {
-            Stop_Transfer();
 
             Message msg = new Message();
             msg.Add(messageFactory.SetFrequency(Frequency[0]));
@@ -385,6 +384,7 @@ namespace DDSControl
                 msg.Add(messageFactory.SetFrequency(Frequency[k]));
             }
 
+            Stop_Transfer();
             ListplayMode(segmentLength);
             StartListplayMode();
             sendToEP2(msg);
@@ -392,8 +392,6 @@ namespace DDSControl
 
         public void SetDeltaFrequencyList(params double[] DeltaFrequency)
         {
-            Stop_Transfer();
-
             Message msg = new Message();
             msg.Add(messageFactory.SetDeltaFrequency(DeltaFrequency[0]));
 
@@ -404,9 +402,15 @@ namespace DDSControl
                 msg.Add(messageFactory.SetDeltaFrequency(DeltaFrequency[k]));
             }
 
+            Stop_Transfer();
             ListplayMode(segmentLength);
             StartListplayMode();
             sendToEP2(msg);
+        }
+
+
+        public void SetDifferentialSweepList(List<double> RisingSlopes, List<double> FallingSlopes)
+        {
         }
         
         #endregion
