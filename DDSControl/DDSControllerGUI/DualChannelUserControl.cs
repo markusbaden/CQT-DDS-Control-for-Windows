@@ -9,22 +9,23 @@ using System.Windows.Forms;
 
 namespace DDSControl
 {
-    public partial class DualChannelUserControl : UserControl , IExtractValues
+    public partial class DualChannelUserControl : UserControl , IChannelSetting
     {
         public DualChannelUserControl()
         {
             InitializeComponent();
         }
 
-        public Dictionary<string, double> ExtractValues()
+        public ChannelSetting ChannelSetting { get { return getChannelSetting(); } }
+
+        private ChannelSetting getChannelSetting()
         {
-            Dictionary<string, double> output = new Dictionary<string, double>();
-
-            output.Add("frequency", Convert.ToDouble(frequencyComboBox.Text));
-            output.Add("relativephase", Convert.ToDouble(phaseComboBox.Text));
-
-            return output;
+            ChannelSetting setting = new ChannelSetting();
+            setting.Frequency = Convert.ToDouble(frequencyComboBox.Text);
+            setting.Phase = Convert.ToDouble(phaseComboBox.Text);
+            return setting;
         }
+        
     
     }
 }

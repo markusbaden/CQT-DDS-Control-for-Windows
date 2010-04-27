@@ -70,18 +70,15 @@ namespace DDSControl
             }
         }
 
-        private void setChannel(AD9958 dds, int ChannelNumber, Dictionary<string, double> Values)
+        private void setChannel(AD9958 dds, ChannelSetting Setting)
         {
-            if (ChannelNumber == 2)
+            if (Setting.Channel == 2)
             {
-                dds.SetTwoChannelRelativePhase(Values["frequency"], Values["relativephase"]);
+                dds.SetTwoChannelRelativePhase(Setting.Frequency,Setting.Phase);
             }
             else
             {
-                #warning DControlDS  GUI performs some functionality of the AD9958 class when setting channels
-                dds.SelectChannelToWrite(ChannelNumber);
-                dds.SetFrequency(Values["frequency"]);
-                dds.SetAmplitude((int)Values["amplitude"]);
+                dds.SetFrequency(Setting.Channel, Setting.Frequency);
             }
         }
             
@@ -106,10 +103,9 @@ namespace DDSControl
             // Parse information
             AD9958 selectedDDS = ddsList[deviceListBox.SelectedIndex];
             int selectedChannel = channelTabControl.SelectedIndex;
-            Dictionary<string, double> values = ((IExtractValues)channelTabControl.SelectedTab.Controls[0]).ExtractValues();
-
-            // Set channel
-            setChannel(selectedDDS, selectedChannel, values);
+            ChannelSetting setting = ((IChannelSetting)channelTabControl.SelectedTab.Controls[0]).ChannelSetting;
+            setting.Channel = selectedChannel;
+            setChannel(selectedDDS, setting);
         }
 
         private void button1_Click(object sender, EventArgs e)

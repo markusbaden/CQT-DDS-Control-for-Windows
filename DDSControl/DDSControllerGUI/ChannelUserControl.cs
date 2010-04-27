@@ -9,12 +9,22 @@ using System.Windows.Forms;
 
 namespace DDSControl
 {
-    public partial class ChannelUserControl : UserControl, IExtractValues
+    public partial class ChannelUserControl : UserControl, IChannelSetting
     {
         public ChannelUserControl()
         {
             InitializeComponent();
-            
+        }
+
+        public ChannelSetting ChannelSetting { get {return getChannelSetting();}}
+
+        private ChannelSetting getChannelSetting()
+        {
+            ChannelSetting setting = new ChannelSetting();
+            setting.AmplitudeScaleFactor = (int)Math.Round(Convert.ToDouble(amplitudeTextBox.Text));
+            setting.Frequency = Convert.ToDouble(frequencyTextBox.Text);
+            setting.Phase = Convert.ToDouble(phaseTextBox.Text);
+            return setting;
         }
 
         public Dictionary<string, double> ExtractValues()
