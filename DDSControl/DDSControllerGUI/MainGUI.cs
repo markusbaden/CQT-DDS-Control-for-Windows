@@ -64,6 +64,10 @@ namespace DDSControl
                 deviceListBox.Items.Add(String.Format("{0} / {1}", dev.Product, dev.SerialNumber));
                 ddsList.Add(new AD9958(new DDSUSBChip(dev as CyUSBDevice)));
             }
+            if (deviceListBox.Items.Count > 0)
+            {
+                deviceListBox.SelectedIndex = 0;
+            }
         }
 
         private void setChannel(AD9958 dds, int ChannelNumber, Dictionary<string, double> Values)
@@ -121,6 +125,20 @@ namespace DDSControl
 
             selectedDDS.SetLinearSweep(2, 50e6, 60e6, 2e-6, 0.1);
             selectedDDS.SetDifferentialSweep(100);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            AD9958 selectedDDS = ddsList[deviceListBox.SelectedIndex];
+            List<double> freqs = new List<double>();
+            double start = 10e6;
+            double incr = 1e6;
+
+            for (int k = 0; k < 20; k++)
+            {
+                freqs.Add(start + k * incr);
+            }
+            selectedDDS.SetFrequencyList(freqs.ToArray());
         }
     }
 }
