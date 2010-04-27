@@ -426,6 +426,7 @@ namespace DDSControl
             for (int k = 1; k < Slopes.Length; k++)
             {
                 currentDelta = deltaTimeForDifferentialSweep(Slopes[k]);
+                msg.Add(messageFactory.SetRampRate(currentDelta));
             }
 
             Stop_Transfer();

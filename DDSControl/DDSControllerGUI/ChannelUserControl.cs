@@ -27,5 +27,10 @@ namespace DDSControl
 
             return values;
         }
+
+        private void amplitudeLabel_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

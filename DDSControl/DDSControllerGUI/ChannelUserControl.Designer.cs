@@ -44,9 +44,10 @@
             this.amplitudeLabel.AutoSize = true;
             this.amplitudeLabel.Location = new System.Drawing.Point(3, 6);
             this.amplitudeLabel.Name = "amplitudeLabel";
-            this.amplitudeLabel.Size = new System.Drawing.Size(53, 13);
+            this.amplitudeLabel.Size = new System.Drawing.Size(116, 13);
             this.amplitudeLabel.TabIndex = 0;
-            this.amplitudeLabel.Text = "Amplitude";
+            this.amplitudeLabel.Text = "Amplitude Scale Factor";
+            this.amplitudeLabel.Click += new System.EventHandler(this.amplitudeLabel_Click);
             // 
             // frequencyLabel
             // 

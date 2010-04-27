@@ -41,11 +41,12 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button3 = new System.Windows.Forms.Button();
             this.channelUserControl1 = new DDSControl.ChannelUserControl();
             this.channelUserControl2 = new DDSControl.ChannelUserControl();
             this.dualChannelUserControl1 = new DDSControl.DualChannelUserControl();
             this.modulationUserControl1 = new DDSControl.ModulationUserControl();
-            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.channelTabControl.SuspendLayout();
             this.channelZeroTabPage.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -185,6 +186,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button4);
             this.tabPage1.Controls.Add(this.button3);
             this.tabPage1.Controls.Add(this.button2);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -194,6 +196,16 @@
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Debug";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(170, 6);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(131, 23);
+            this.button3.TabIndex = 15;
+            this.button3.Text = "Frequency List";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // channelUserControl1
             // 
@@ -223,15 +235,15 @@
             this.modulationUserControl1.Size = new System.Drawing.Size(243, 239);
             this.modulationUserControl1.TabIndex = 7;
             // 
-            // button3
+            // button4
             // 
-            this.button3.Location = new System.Drawing.Point(6, 35);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(131, 23);
-            this.button3.TabIndex = 15;
-            this.button3.Text = "Frequency List";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button4.Location = new System.Drawing.Point(6, 35);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(131, 23);
+            this.button4.TabIndex = 16;
+            this.button4.Text = "Differential Sweep List";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // MainGUI
             // 
@@ -276,6 +288,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
 
     }
 }

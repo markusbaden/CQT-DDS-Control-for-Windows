@@ -140,5 +140,25 @@ namespace DDSControl
             }
             selectedDDS.SetFrequencyList(freqs.ToArray());
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            AD9958 selectedDDS = ddsList[deviceListBox.SelectedIndex];
+            double startSlope = 100;
+            double slopeIncr = 100;
+
+            List<double> slopes = new List<double>();
+            
+            selectedDDS.SetLinearSweep(2, 50e6, 60e6, 2e-6, 0.1);
+            selectedDDS.SetDifferentialSweep(startSlope);
+
+            for (int k = 0; k < 10; k++)
+            {
+                slopes.Add(startSlope + k* slopeIncr);
+            }
+
+            selectedDDS.SetDifferentialSweepList(slopes.ToArray());
+
+        }
     }
 }
