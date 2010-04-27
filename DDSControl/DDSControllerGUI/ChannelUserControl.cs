@@ -21,26 +21,9 @@ namespace DDSControl
         private ChannelSetting getChannelSetting()
         {
             ChannelSetting setting = new ChannelSetting();
-            setting.AmplitudeScaleFactor = (int)Math.Round(Convert.ToDouble(amplitudeTextBox.Text));
+            setting.Channel = Convert.ToInt32(comboBox1.Text);
             setting.Frequency = Convert.ToDouble(frequencyTextBox.Text);
-            setting.Phase = Convert.ToDouble(phaseTextBox.Text);
             return setting;
-        }
-
-        public Dictionary<string, double> ExtractValues()
-        {
-            Dictionary<string, double> values = new Dictionary<string, double>();
-
-            values.Add("amplitude", Convert.ToDouble(amplitudeTextBox.Text));
-            values.Add("frequency", Convert.ToDouble(frequencyTextBox.Text));
-            values.Add("phase", Convert.ToDouble(phaseTextBox.Text));
-
-            return values;
-        }
-
-        private void amplitudeLabel_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

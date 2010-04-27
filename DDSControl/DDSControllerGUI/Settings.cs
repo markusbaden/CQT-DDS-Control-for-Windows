@@ -19,5 +19,13 @@ namespace DDSControl
         public int AmplitudeScaleFactor;
         public double Frequency;
         public double Phase;
+
+        public ChannelSetting()
+        {
+            Channel = 0;
+            AmplitudeScaleFactor = 1023;
+            Frequency = 0;
+            Phase = 0;               
+        }
     }
 }
