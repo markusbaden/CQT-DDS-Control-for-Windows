@@ -12,4 +12,12 @@ namespace DDSControl
         public int Levels;
         public List<double> ChannelWords;
     }
+
+    public class ChannelSetting
+    {
+        public int Channel;
+        public int AmplitudeScaleFactor;
+        public double Frequency;
+        public double Phase;
+    }
 }

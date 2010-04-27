@@ -14,4 +14,9 @@ namespace DDSControl
     {
         ModulationSetting ModulationSetting { get; }
     }
+
+    public interface IChannelSetting
+    {
+        ChannelSetting ChannelSetting { get; }
+    }
 }
