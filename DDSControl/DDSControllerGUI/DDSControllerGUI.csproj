@@ -73,7 +73,7 @@
     <Compile Include="DualChannelUserControl.Designer.cs">
       <DependentUpon>DualChannelUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="IExtractValues.cs" />
+    <Compile Include="ISettings.cs" />
     <Compile Include="MainGUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,7 +122,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="SelectedValues.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CQTAD9958\CQTAD9958.csproj">
