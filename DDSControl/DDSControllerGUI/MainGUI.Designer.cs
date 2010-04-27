@@ -32,24 +32,21 @@
             this.fullResetButton = new System.Windows.Forms.Button();
             this.channelTabControl = new System.Windows.Forms.TabControl();
             this.channelZeroTabPage = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.channelUserControl1 = new DDSControl.ChannelUserControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.dualChannelUserControl1 = new DDSControl.DualChannelUserControl();
             this.setChannelButton = new System.Windows.Forms.Button();
             this.tabControlMode = new System.Windows.Forms.TabControl();
             this.tabSingletone = new System.Windows.Forms.TabPage();
             this.tabModulation = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.button3 = new System.Windows.Forms.Button();
-            this.channelUserControl1 = new DDSControl.ChannelUserControl();
-            this.channelUserControl2 = new DDSControl.ChannelUserControl();
-            this.dualChannelUserControl1 = new DDSControl.DualChannelUserControl();
             this.modulationUserControl1 = new DDSControl.ModulationUserControl();
+            this.button1 = new System.Windows.Forms.Button();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.channelTabControl.SuspendLayout();
             this.channelZeroTabPage.SuspendLayout();
-            this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabControlMode.SuspendLayout();
             this.tabSingletone.SuspendLayout();
@@ -78,7 +75,6 @@
             // channelTabControl
             // 
             this.channelTabControl.Controls.Add(this.channelZeroTabPage);
-            this.channelTabControl.Controls.Add(this.tabPage2);
             this.channelTabControl.Controls.Add(this.tabPage3);
             this.channelTabControl.Location = new System.Drawing.Point(6, 6);
             this.channelTabControl.Name = "channelTabControl";
@@ -94,19 +90,15 @@
             this.channelZeroTabPage.Padding = new System.Windows.Forms.Padding(3);
             this.channelZeroTabPage.Size = new System.Drawing.Size(253, 112);
             this.channelZeroTabPage.TabIndex = 0;
-            this.channelZeroTabPage.Text = "Channel 0";
+            this.channelZeroTabPage.Text = "Single Channel";
             this.channelZeroTabPage.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // channelUserControl1
             // 
-            this.tabPage2.Controls.Add(this.channelUserControl2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(253, 112);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Channel 1";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.channelUserControl1.Location = new System.Drawing.Point(6, 6);
+            this.channelUserControl1.Name = "channelUserControl1";
+            this.channelUserControl1.Size = new System.Drawing.Size(224, 88);
+            this.channelUserControl1.TabIndex = 0;
             // 
             // tabPage3
             // 
@@ -116,8 +108,15 @@
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(253, 112);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Both";
+            this.tabPage3.Text = "Both Channels";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // dualChannelUserControl1
+            // 
+            this.dualChannelUserControl1.Location = new System.Drawing.Point(6, 6);
+            this.dualChannelUserControl1.Name = "dualChannelUserControl1";
+            this.dualChannelUserControl1.Size = new System.Drawing.Size(241, 72);
+            this.dualChannelUserControl1.TabIndex = 0;
             // 
             // setChannelButton
             // 
@@ -164,6 +163,13 @@
             this.tabModulation.Text = "Modulation";
             this.tabModulation.UseVisualStyleBackColor = true;
             // 
+            // modulationUserControl1
+            // 
+            this.modulationUserControl1.Location = new System.Drawing.Point(6, 6);
+            this.modulationUserControl1.Name = "modulationUserControl1";
+            this.modulationUserControl1.Size = new System.Drawing.Size(243, 239);
+            this.modulationUserControl1.TabIndex = 7;
+            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(52, 251);
@@ -173,16 +179,6 @@
             this.button1.Text = "Set Modulation";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(6, 6);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(131, 23);
-            this.button2.TabIndex = 14;
-            this.button2.Text = "Differential Sweep";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // tabPage1
             // 
@@ -197,6 +193,16 @@
             this.tabPage1.Text = "Debug";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(6, 35);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(131, 23);
+            this.button4.TabIndex = 16;
+            this.button4.Text = "Differential Sweep List";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(170, 6);
@@ -207,43 +213,15 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // channelUserControl1
+            // button2
             // 
-            this.channelUserControl1.Location = new System.Drawing.Point(6, 6);
-            this.channelUserControl1.Name = "channelUserControl1";
-            this.channelUserControl1.Size = new System.Drawing.Size(224, 88);
-            this.channelUserControl1.TabIndex = 0;
-            // 
-            // channelUserControl2
-            // 
-            this.channelUserControl2.Location = new System.Drawing.Point(6, 6);
-            this.channelUserControl2.Name = "channelUserControl2";
-            this.channelUserControl2.Size = new System.Drawing.Size(224, 88);
-            this.channelUserControl2.TabIndex = 1;
-            // 
-            // dualChannelUserControl1
-            // 
-            this.dualChannelUserControl1.Location = new System.Drawing.Point(6, 6);
-            this.dualChannelUserControl1.Name = "dualChannelUserControl1";
-            this.dualChannelUserControl1.Size = new System.Drawing.Size(241, 72);
-            this.dualChannelUserControl1.TabIndex = 0;
-            // 
-            // modulationUserControl1
-            // 
-            this.modulationUserControl1.Location = new System.Drawing.Point(6, 6);
-            this.modulationUserControl1.Name = "modulationUserControl1";
-            this.modulationUserControl1.Size = new System.Drawing.Size(243, 239);
-            this.modulationUserControl1.TabIndex = 7;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(6, 35);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(131, 23);
-            this.button4.TabIndex = 16;
-            this.button4.Text = "Differential Sweep List";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.button2.Location = new System.Drawing.Point(6, 6);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(131, 23);
+            this.button2.TabIndex = 14;
+            this.button2.Text = "Differential Sweep";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // MainGUI
             // 
@@ -258,7 +236,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainGUI_FormClosing_1);
             this.channelTabControl.ResumeLayout(false);
             this.channelZeroTabPage.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabControlMode.ResumeLayout(false);
             this.tabSingletone.ResumeLayout(false);
@@ -274,11 +251,9 @@
         private System.Windows.Forms.Button fullResetButton;
         private System.Windows.Forms.TabControl channelTabControl;
         private System.Windows.Forms.TabPage channelZeroTabPage;
-        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private ChannelUserControl channelUserControl1;
         private System.Windows.Forms.Button setChannelButton;
-        private ChannelUserControl channelUserControl2;
         private DualChannelUserControl dualChannelUserControl1;
         private System.Windows.Forms.TabControl tabControlMode;
         private System.Windows.Forms.TabPage tabSingletone;

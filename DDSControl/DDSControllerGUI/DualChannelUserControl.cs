@@ -21,6 +21,7 @@ namespace DDSControl
         private ChannelSetting getChannelSetting()
         {
             ChannelSetting setting = new ChannelSetting();
+            setting.Channel = 2;
             setting.Frequency = Convert.ToDouble(frequencyComboBox.Text);
             setting.Phase = Convert.ToDouble(phaseComboBox.Text);
             return setting;

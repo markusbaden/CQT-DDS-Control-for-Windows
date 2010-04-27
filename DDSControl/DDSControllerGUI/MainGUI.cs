@@ -102,9 +102,7 @@ namespace DDSControl
         {
             // Parse information
             AD9958 selectedDDS = ddsList[deviceListBox.SelectedIndex];
-            int selectedChannel = channelTabControl.SelectedIndex;
             ChannelSetting setting = ((IChannelSetting)channelTabControl.SelectedTab.Controls[0]).ChannelSetting;
-            setting.Channel = selectedChannel;
             setChannel(selectedDDS, setting);
         }
 
