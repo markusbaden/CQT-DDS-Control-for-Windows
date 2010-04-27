@@ -347,13 +347,7 @@ namespace DDSControl
         /// <param name="DifferentialSlope">Differential slope dS of the sweep of the difference of the two channels</param>
         public void SetDifferentialSweep(double DifferentialSlope)
         {
-            // Slope of channel 0 is minimum slope f_min/t_max
-            double minSlope = minDeltaFrequency / maxDeltaTime;
-
-            // Slope of channel 1 is S1=S0 + S
-            // fixing f2=fmin we get (fixing t2=tmax is bad since it leads to S1_min = fmin/tmax)
-            // t2 = t_max / (1+S/Smin) = t_max / (1+S*tmax/fmin)
-            double deltaTime = maxDeltaTime / (1 + DifferentialSlope * maxDeltaTime / minDeltaFrequency);
+            double deltaTime = deltaTimeForDifferentialSweep(DifferentialSlope);
 
             Message msg = new Message();
             msg.Add(messageFactory.SelectChannel(0));
@@ -368,7 +362,19 @@ namespace DDSControl
 
         private double maxDeltaTime = 2.048e-6;
         private double minDeltaFrequency = 0.1;
-        
+
+        private double deltaTimeForDifferentialSweep(double DifferentialSlope)
+        {
+            // Slope of channel 0 is minimum slope f_min/t_max
+            double minSlope = minDeltaFrequency / maxDeltaTime;
+
+            // Slope of channel 1 is S1=S0 + S
+            // fixing f2=fmin we get (fixing t2=tmax is bad since it leads to S1_min = fmin/tmax)
+            // t2 = t_max / (1+S/Smin) = t_max / (1+S*tmax/fmin)
+            double deltaTime = maxDeltaTime / (1 + DifferentialSlope * maxDeltaTime / minDeltaFrequency);
+            return deltaTime;        
+        }
+
         #endregion
 
         #region Listplay Mode Commands
@@ -410,9 +416,22 @@ namespace DDSControl
         }
 
 
-        public void SetDifferentialSweepList(List<double> RisingSlopes, List<double> FallingSlopes)
+        public void SetDifferentialSweepList(params double[] Slopes)
         {
             Message msg = new Message();
+            double currentDelta = deltaTimeForDifferentialSweep(Slopes[0]);
+            msg.Add(messageFactory.SetRampRate(currentDelta));
+            int segmentLength = msg.Count;
+
+            for (int k = 1; k < Slopes.Length; k++)
+            {
+                currentDelta = deltaTimeForDifferentialSweep(Slopes[k]);
+            }
+
+            Stop_Transfer();
+            ListplayMode(segmentLength);
+            StartListplayMode();
+            sendToEP2(msg);
         }
         
         #endregion
