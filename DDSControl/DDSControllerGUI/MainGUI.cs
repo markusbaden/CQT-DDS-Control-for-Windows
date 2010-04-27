@@ -119,8 +119,8 @@ namespace DDSControl
         {
             AD9958 selectedDDS = ddsList[deviceListBox.SelectedIndex];
 
-            selectedDDS.SetLinearSweep(2, 10e6, 20e6, 2e-6, 0.1);
-            selectedDDS.SetDifferentialSweepSlope(10);
+            selectedDDS.SetLinearSweep(2, 50e6, 60e6, 2e-6, 0.1);
+            selectedDDS.SetDifferentialSweepSlope(100);
         }
     }
 }
