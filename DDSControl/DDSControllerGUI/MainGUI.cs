@@ -168,7 +168,7 @@ namespace DDSControl
             for (int k = 0; k < nSteps; k++)
             {
                 freqs.Add(start + k * incr);
-                relAmp.Add(k / ((double)nSteps));
+                relAmp.Add(1- (k / ((double)nSteps)));
             }
             selectedDDS.SetFrequencyAmplitudeList(freqs.ToArray(), relAmp.ToArray());
         }
