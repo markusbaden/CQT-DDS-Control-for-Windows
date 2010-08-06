@@ -418,8 +418,10 @@ namespace DDSControl
             for (int k = 1; k < Frequency.Length; k++)
             {
                 msg.Add(messageFactory.SetFrequency(Frequency[k]));
-                msg.Add(messageFactory.SetAmplitude(ampScaleFactors[k]))
+                msg.Add(messageFactory.SetAmplitude(ampScaleFactors[k]));
             }
+        
+            startListplayModeWithMessage(msg, segmentLength);
         }
 
         public void SetDeltaFrequencyList(params double[] DeltaFrequency)
@@ -434,10 +436,7 @@ namespace DDSControl
                 msg.Add(messageFactory.SetDeltaFrequency(DeltaFrequency[k]));
             }
 
-            Stop_Transfer();
-            ListplayMode(segmentLength);
-            StartListplayMode();
-            sendToEP2(msg);
+            startListplayModeWithMessage(msg, segmentLength);
         }
 
 
@@ -453,12 +452,17 @@ namespace DDSControl
                 currentDelta = deltaTimeForDifferentialSweep(Slopes[k]);
                 msg.Add(messageFactory.SetRampRate(currentDelta));
             }
+            startListplayModeWithMessage(msg, segmentLength);
+        
+        }
 
+        private void startListplayModeWithMessage(Message message, int SegmentLength)
+        {
             Stop_Transfer();
-            ListplayMode(segmentLength);
+            ListplayMode(SegmentLength);
             StartListplayMode();
-            sendToEP2(msg);
-        }        
+            sendToEP2(message);
+        }
         #endregion
 
         #region Functions for sending and receiving messages
