@@ -405,14 +405,14 @@ namespace DDSControl
             
             for (int k = 0; k < RelativeAmplitude.Length; k++)
             {
-                ampScaleFactors.Add((int) Math.Round(RelativeAmplitude[k] * 1023);
+                ampScaleFactors.Add((int) Math.Round(RelativeAmplitude[k] * 1023));
             }
             
             Message msg = new Message();
             
             // Add first frequency amplitude to get segment list
             msg.Add(messageFactory.SetFrequency(Frequency[0]));
-            msg.Add(messageFactory.SetAmplitude(ampScaleFactors[0]);
+            msg.Add(messageFactory.SetAmplitude(ampScaleFactors[0]));
             
             int segmentLength = msg.Count;
             for (int k = 1; k < Frequency.Length; k++)
