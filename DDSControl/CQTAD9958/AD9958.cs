@@ -397,6 +397,31 @@ namespace DDSControl
             sendToEP2(msg);
         }
 
+        public void SetFrequencyAmplitudeList(double[] Frequency, double[] RelativeAmplitude)
+        {
+            // Convert Relative Amplitude to amplitude scalefactor
+            // The max amplitude scalefactor is hard coded in the for loop
+            List<int> ampScaleFactors = new List<int>();
+            
+            for (int k = 0; k < RelativeAmplitude.Length; k++)
+            {
+                ampScaleFactors.Add((int) Math.Round(RelativeAmplitude[k] * 1023);
+            }
+            
+            Message msg = new Message();
+            
+            // Add first frequency amplitude to get segment list
+            msg.Add(messageFactory.SetFrequency(Frequency[0]));
+            msg.Add(messageFactory.SetAmplitude(ampScaleFactors[0]);
+            
+            int segmentLength = msg.Count;
+            for (int k = 1; k < Frequency.Length; k++)
+            {
+                msg.Add(messageFactory.SetFrequency(Frequency[k]));
+                msg.Add(messageFactory.SetAmplitude(ampScaleFactors[k]))
+            }
+        }
+
         public void SetDeltaFrequencyList(params double[] DeltaFrequency)
         {
             Message msg = new Message();
@@ -433,8 +458,7 @@ namespace DDSControl
             ListplayMode(segmentLength);
             StartListplayMode();
             sendToEP2(msg);
-        }
-        
+        }        
         #endregion
 
         #region Functions for sending and receiving messages
