@@ -161,6 +161,10 @@ namespace DDSControl
 
             Full_DDS_Reset();
 
+            // Since board revision too the DDS needs some time to process the Full_DDS_Reset
+            // So we will sleep for ten milliseconds
+            System.Threading.Thread.Sleep(10);
+
             log.Info("Initializing DDS as part of master reset.");
             
             Message initialization = new Message();
