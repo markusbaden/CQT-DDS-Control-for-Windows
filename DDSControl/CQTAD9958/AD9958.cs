@@ -542,6 +542,5 @@ namespace DDSControl
             messageFactory = new AD9958MessageFactory();
         }
         #endregion
-
     }
 }

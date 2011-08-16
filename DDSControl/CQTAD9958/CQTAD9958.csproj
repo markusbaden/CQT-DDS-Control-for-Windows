@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="AD9958.cs" />
     <Compile Include="AD9958MessageFactory.cs" />
+    <Compile Include="CyLabviewHelper.cs" />
     <Compile Include="DDSUSBChip.cs" />
     <Compile Include="DDSRegister.cs" />
     <Compile Include="DDSChip.cs" />
