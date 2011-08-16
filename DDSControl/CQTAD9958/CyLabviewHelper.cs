@@ -6,7 +6,7 @@ using CyUSB;
 
 namespace DDSControl
 {
-    class CyLabviewHelper
+    public class CyLabviewHelper
     {
         public CyLabviewHelper()
         {
