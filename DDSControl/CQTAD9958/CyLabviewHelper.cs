@@ -10,6 +10,7 @@ namespace DDSControl
     {
         public CyLabviewHelper()
         {
+            int i = 0;
         }
         
         public List<string> ConnectedDDSBoards()
