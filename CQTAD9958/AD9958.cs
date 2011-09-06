@@ -157,6 +157,7 @@ namespace DDSControl
         /// </summary>
         public void MasterReset()
         {
+            // Test comment
             if (log.IsInfoEnabled) { log.Info("Performing a master reset."); }
 
             Full_DDS_Reset();
