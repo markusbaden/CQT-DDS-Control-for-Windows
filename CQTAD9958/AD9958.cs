@@ -537,6 +537,42 @@ namespace DDSControl
             initializeAD9958();
         }
 
+        /// <summary>
+        /// Create a ADD9958 by looking up a specific connected device by serial number.
+        /// </summary>
+        /// <param name="DeviceNumber">Device number.</param>
+        public AD9958(string SerialNumber)
+        {
+            // A list of the serial numbers of all currently connected
+            // boards is already implemented in CyLabviewHelper, so we are going to use that one
+            CyLabviewHelper helper = new CyLabviewHelper();
+            List<string> serialNumbers = helper.ConnectedDDSBoards();
+
+            // Find device number by serial
+            int deviceNumber = 0;
+            bool found = false;
+            for (int i = 0; i < serialNumbers.Count; i++)
+            {
+                if (String.Equals(SerialNumber, serialNumbers[i], StringComparison.CurrentCultureIgnoreCase))
+                {
+                    found = true;
+                    deviceNumber = i;
+                    break;
+                }
+            }
+
+            // Check whether the serial number was found, if not then throw exception
+            // Otherwise the device with deviceNumber 0 would be returned.
+            if (!found)
+            {
+                throw new System.ArgumentException("Invalid serial number, no such device connected", "SerialNumber");
+            }
+
+            USBDeviceList deviceList = new USBDeviceList(CyConst.DEVICES_CYUSB);
+            device = (new DDSUSBChip(deviceList[deviceNumber] as CyUSBDevice));
+            initializeAD9958();
+        }
+
         private void initializeAD9958()
         {
             messageFactory = new AD9958MessageFactory();
