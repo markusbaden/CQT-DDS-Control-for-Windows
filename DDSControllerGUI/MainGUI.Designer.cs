@@ -42,11 +42,13 @@
             this.modulationUserControl1 = new DDSControl.ModulationUserControl();
             this.button1 = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
+            this.debugDeviceListBox = new System.Windows.Forms.ListBox();
+            this.button6 = new System.Windows.Forms.Button();
             this.channelTabControl.SuspendLayout();
             this.channelZeroTabPage.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -184,6 +186,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button6);
+            this.tabPage1.Controls.Add(this.debugDeviceListBox);
             this.tabPage1.Controls.Add(this.button5);
             this.tabPage1.Controls.Add(this.button4);
             this.tabPage1.Controls.Add(this.button3);
@@ -195,6 +199,16 @@
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Debug";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(143, 35);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(126, 23);
+            this.button5.TabIndex = 17;
+            this.button5.Text = "FreqAmp List";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button4
             // 
@@ -235,15 +249,23 @@
             this.label1.TabIndex = 14;
             this.label1.Text = "Select your DDS";
             // 
-            // button5
+            // debugDeviceListBox
             // 
-            this.button5.Location = new System.Drawing.Point(143, 35);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(126, 23);
-            this.button5.TabIndex = 17;
-            this.button5.Text = "FreqAmp List";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.debugDeviceListBox.FormattingEnabled = true;
+            this.debugDeviceListBox.Location = new System.Drawing.Point(6, 213);
+            this.debugDeviceListBox.Name = "debugDeviceListBox";
+            this.debugDeviceListBox.Size = new System.Drawing.Size(120, 95);
+            this.debugDeviceListBox.TabIndex = 18;
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(7, 184);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(119, 23);
+            this.button6.TabIndex = 19;
+            this.button6.Text = "List of Devices";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // MainGUI
             // 
@@ -290,6 +312,8 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.ListBox debugDeviceListBox;
 
     }
 }

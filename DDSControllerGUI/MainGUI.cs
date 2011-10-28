@@ -172,5 +172,21 @@ namespace DDSControl
             }
             selectedDDS.SetFrequencyAmplitudeList(freqs.ToArray(), relAmp.ToArray());
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            CyLabviewHelper helper = new CyLabviewHelper();
+            List<string> serialList = helper.ConnectedDDSBoards();
+            debugDeviceListBox.Items.Clear();
+
+            if (deviceList.Count > 0)
+            {
+                foreach (string serial in serialList)
+                {
+                    debugDeviceListBox.Items.Add(serial);
+                }
+            }
+
+        }
     }
 }
