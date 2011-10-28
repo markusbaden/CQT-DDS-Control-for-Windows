@@ -8,9 +8,11 @@ namespace DDSControl
 {
     public class CyLabviewHelper
     {
+        private int i;
+
         public CyLabviewHelper()
         {
-            int i = 0;
+            i = 0;
         }
         
         public List<string> ConnectedDDSBoards()
